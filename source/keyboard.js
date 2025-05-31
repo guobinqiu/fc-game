@@ -17,67 +17,85 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // Keyboard events are bound in the UI
-JSNES.Keyboard = function() {
-    var i;
-    
-    this.keys = {
-        KEY_B: 0,
-        KEY_A: 1,
-        KEY_SELECT: 2,
-        KEY_START: 3,
-        KEY_UP: 4,
-        KEY_DOWN: 5,
-        KEY_LEFT: 6,
-        KEY_RIGHT: 7
-    };
+JSNES.Keyboard = function () {
+  // 检测是否为移动设备
+  this.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    this.state1 = new Array(8);
-    for (i = 0; i < this.state1.length; i++) {
-        this.state1[i] = 0x40;
+  // 统一使用单个状态数组
+  this.state = new Array(8);
+  this.resetState();
+
+  // 绑定键盘事件
+  var self = this;
+  document.addEventListener('keydown', function (evt) {
+    try {
+      if (!self.shouldHandleKeyEvent(evt)) {
+        return;
+      }
+      self.keyDown(evt);
+    } catch (e) {
+      console.error('键盘事件处理错误:', e);
     }
-    this.state2 = new Array(8);
-    for (i = 0; i < this.state2.length; i++) {
-        this.state2[i] = 0x40;
+  });
+  document.addEventListener('keyup', function (evt) {
+    try {
+      if (!self.shouldHandleKeyEvent(evt)) {
+        return;
+      }
+      self.keyUp(evt);
+    } catch (e) {
+      console.error('键盘事件处理错误:', e);
     }
+  });
 };
 
 JSNES.Keyboard.prototype = {
-    setKey: function(key, value) {
-        switch (key) {
-            // Player1 - 主要控制
-            case 38: this.state1[this.keys.KEY_UP] = value; break;     // UP: Arrow Up(38)
-            case 40: this.state1[this.keys.KEY_DOWN] = value; break;   // DOWN: Arrow Down(40)
-            case 37: this.state1[this.keys.KEY_LEFT] = value; break;   // LEFT: Arrow Left(37)
-            case 39: this.state1[this.keys.KEY_RIGHT] = value; break;  // RIGHT: Arrow Right(39)
-            case 88: this.state1[this.keys.KEY_B] = value; break;      // B: X(88)
-            case 90: this.state1[this.keys.KEY_A] = value; break;      // A: Z(90)
-            case 17: this.state1[this.keys.KEY_SELECT] = value; break; // SELECT: Ctrl(17)
-            case 13: this.state1[this.keys.KEY_START] = value; break;  // START: Enter(13)
-            // Player2 - 仅方向和AB键
-            case 87: this.state2[this.keys.KEY_UP] = value; break;     // Up: W(87)
-            case 83: this.state2[this.keys.KEY_DOWN] = value; break;   // Down: S(83)
-            case 65: this.state2[this.keys.KEY_LEFT] = value; break;   // Left: A(65)
-            case 68: this.state2[this.keys.KEY_RIGHT] = value; break;  // Right: D(68)
-            case 75: this.state2[this.keys.KEY_B] = value; break;      // B: K(75)
-            case 74: this.state2[this.keys.KEY_A] = value; break;      // A: J(74)
-            default: return true;
-        }
-        return false; // preventDefault
-    },
-
-    keyDown: function(evt) {
-        if (!this.setKey(evt.keyCode, 0x41) && evt.preventDefault) {
-            evt.preventDefault();
-        }
-    },
-    
-    keyUp: function(evt) {
-        if (!this.setKey(evt.keyCode, 0x40) && evt.preventDefault) {
-            evt.preventDefault();
-        }
-    },
-    
-    keyPress: function(evt) {
-        evt.preventDefault();
+  resetState: function () {
+    for (var i = 0; i < 8; i++) {
+      this.state[i] = 0x40;
     }
+  },
+
+  // 判断是否应该处理按键事件
+  shouldHandleKeyEvent: function (evt) {
+    // 如果是移动设备，只过滤方向键
+    if (this.isMobileDevice) {
+      var key = evt.keyCode;
+      // 只过滤方向键，其他按键（包括 A/B 按钮）正常工作
+      if (key === 37 || key === 38 || key === 39 || key === 40) {
+        // 确保只在这些按键被按下时阻止默认行为
+        evt.preventDefault();
+        return false;
+      }
+    }
+    return true;
+  },
+
+  keyDown: function (evt) {
+    var key = evt.keyCode;
+    if (key in this.keyCodeMap) {
+      this.state[this.keyCodeMap[key]] = 0x41;
+    }
+  },
+
+  keyUp: function (evt) {
+    var key = evt.keyCode;
+    if (key in this.keyCodeMap) {
+      this.state[this.keyCodeMap[key]] = 0x40;
+    }
+  },
+
+  // 键盘映射表（保持原有映射）
+  keyCodeMap: {
+    38: 4, // Up
+    40: 5, // Down
+    37: 6, // Left
+    39: 7, // Right
+    90: 0, // Z (PC端 A)
+    88: 1, // X (PC端 B)
+    65: 0, // A (手机端 A)
+    66: 1, // B (手机端 B)
+    17: 2, // Control (Select)
+    13: 3  // Enter (Start)
+  }
 };

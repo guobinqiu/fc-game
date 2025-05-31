@@ -74,8 +74,8 @@
 
       <!-- 右侧动作按钮 -->
       <div class="action-buttons">
-        <div class="action-button" data-key="B">B</div>
-        <div class="action-button" data-key="A">A</div>
+        <div class="action-button" data-key="b">B</div>
+        <div class="action-button" data-key="a">A</div>
       </div>
     </div>
   </div>
@@ -171,14 +171,13 @@
 
     // 移动端控制器处理
     function setupMobileControls() {
-      const buttons = document.querySelectorAll('.direction-button, .action-button, .system-button');
-      const keyMap = {
+      const buttons = document.querySelectorAll('.direction-button, .action-button, .system-button'); const keyMap = {
         'up': 38,    // 上箭头
         'down': 40,  // 下箭头
         'left': 37,  // 左箭头
         'right': 39, // 右箭头
-        'a': 90,     // Z键
-        'b': 88,     // X键
+        'a': 88,     // X键 (PC端X)
+        'b': 90,     // Z键 (PC端Z)
         'select': 17, // Ctrl键
         'start': 13   // Enter键
       };

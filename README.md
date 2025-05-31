@@ -2,16 +2,16 @@
 
 ## 按键设置
 
-| 游戏手柄 | 电脑键盘player1 | 电脑键盘player2 |
-| -------- | --------------- | --------------- |
-| Up       | ↑               | W               |
-| Down     | ↓               | S               |
-| Left     | ←               | A               |
-| Right    | →               | D               |
-| B        | X               | K               |
-| A        | Z               | J               |
-| Select   | Space           | -               |
-| Start    | Enter           | -               |
+| 游戏手柄 | 电脑键盘按键 |
+| -------- | ------------ |
+| Up       | ↑            |
+| Down     | ↓            |
+| Left     | ←            |
+| Right    | →            |
+| B        | X            |
+| A        | Z            |
+| Select   | Space        |
+| Start    | Enter        |
 
 ## 在线运行
 
