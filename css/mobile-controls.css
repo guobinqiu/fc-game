@@ -1,0 +1,117 @@
+.mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.direction-pad {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 150px;
+    height: 150px;
+}
+
+.direction-button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    touch-action: none;
+}
+
+.direction-button:active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.up-button { top: 0; left: 50px; transform: translateX(-50%); }
+.down-button { bottom: 0; left: 50px; transform: translateX(-50%); }
+.left-button { left: 0; top: 50px; transform: translateY(-50%); }
+.right-button { right: 0; top: 50px; transform: translateY(-50%); }
+
+.action-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.action-button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    touch-action: none;
+}
+
+.action-button:active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: block;
+    }
+
+    .main {
+        padding: 10px;
+        padding-bottom: 200px;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+        padding: 5px;
+    }
+
+    #rom-select {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .controls button {
+        padding: 5px 10px;
+    }
+
+    .screen {
+        height: auto;
+    }
+
+    canvas.nes-screen {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .main {
+        padding-bottom: 150px;
+    }
+
+    .direction-pad {
+        transform: scale(0.8);
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .action-buttons {
+        transform: scale(0.8);
+        bottom: 10px;
+        right: 10px;
+    }
+} 
