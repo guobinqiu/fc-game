@@ -2,207 +2,231 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="format-detection" content="email=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="full-screen" content="yes">
-    <meta name="browsermode" content="application">
-    <meta name="x5-orientation" content="landscape">
-    <meta name="x5-fullscreen" content="true">
-    <meta name="x5-page-mode" content="app">
-    <title>FC游戏在线玩</title>
-    <meta name="keywords" content="FC/NES模拟器，在线畅玩八十款任天堂红白机游戏，小霸王游戏机其乐无穷。支持魂斗罗/超级玛丽/忍者龙剑传等等任天堂红白机游戏。" />
-    <meta name="description" content="非常适合在手机/电脑上在线游玩，近乎完美的还原任天堂FC/NES原版ROM游戏的视频和声音。" />
-    <link href="css/jsnes.css" rel="stylesheet" type="text/css" />
-    <link href="css/mobile-controls.css" rel="stylesheet" type="text/css" />
-    <link rel="shortcut icon" href="/static/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="email=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="full-screen" content="yes">
+  <meta name="browsermode" content="application">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="x5-page-mode" content="app">
+  <title>FC游戏在线玩</title>
+  <meta name="keywords" content="FC/NES模拟器，在线畅玩八十款任天堂红白机游戏，小霸王游戏机其乐无穷。支持魂斗罗/超级玛丽/忍者龙剑传等等任天堂红白机游戏。" />
+  <meta name="description" content="非常适合在手机/电脑上在线游玩，近乎完美的还原任天堂FC/NES原版ROM游戏的视频和声音。" />
+  <link href="css/jsnes.css" rel="stylesheet" type="text/css" />
+  <link href="css/mobile-controls.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-    <!-- 引入SVG图标 -->
-    <div style="display: none;" id="svg-container"></div>
-    
-    <div class="main">
-        <div class="controls">
-            <select id="rom-select"></select>
-            <button id="btn-pause">
-                <svg class="icon"><use href="#icon-pause"/></svg>
-            </button>
-            <button id="btn-restart">
-                <svg class="icon"><use href="#icon-restart"/></svg>
-            </button>
-            <button id="btn-sound">
-                <svg class="icon"><use href="#icon-volume-high"/></svg>
-            </button>
-        </div>
-        <div class="screen">
-            <div id="emulator"></div>
-        </div>
+  <!-- 引入SVG图标 -->
+  <div style="display: none;" id="svg-container"></div>
+
+  <div class="main">
+    <div class="controls">
+      <select id="rom-select"></select>
+      <button id="btn-pause">
+        <svg class="icon">
+          <use href="#icon-pause" />
+        </svg>
+      </button>
+      <button id="btn-restart">
+        <svg class="icon">
+          <use href="#icon-restart" />
+        </svg>
+      </button>
+      <button id="btn-sound">
+        <svg class="icon">
+          <use href="#icon-volume-high" />
+        </svg>
+      </button>
     </div>
-
-    <!-- 移动端虚拟按键 -->
-    <div class="mobile-controls">
-        <div class="direction-pad">
-            <div class="direction-button up-button" data-key="up"></div>
-            <div class="direction-button down-button" data-key="down"></div>
-            <div class="direction-button left-button" data-key="left"></div>
-            <div class="direction-button right-button" data-key="right"></div>
-        </div>
-        <div class="action-buttons">
-            <div class="action-button" data-key="a">A</div>
-            <div class="action-button" data-key="b">B</div>
-            <div class="action-button" data-key="select">SELECT</div>
-            <div class="action-button" data-key="start">START</div>
-        </div>
+    <div class="screen">
+      <div id="emulator"></div>
     </div>
+  </div>
 
-    <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="lib/dynamicaudio-min.js"></script>
-    <script type="text/javascript" src="source/nes.js"></script>
-    <script type="text/javascript" src="source/utils.js"></script>
-    <script type="text/javascript" src="source/cpu.js"></script>
-    <script type="text/javascript" src="source/keyboard.js"></script>
-    <script type="text/javascript" src="source/mappers.js"></script>
-    <script type="text/javascript" src="source/papu.js"></script>
-    <script type="text/javascript" src="source/ppu.js"></script>
-    <script type="text/javascript" src="source/rom.js"></script>
-    <script type="text/javascript" src="source/ui.js"></script>
+  <!-- 强制横屏提示 -->
+  <div class="rotate-prompt">
+    请将手机横屏以获得最佳游戏体验
+  </div>
 
-    <script type="text/javascript">
-        // 加载SVG图标
-        fetch('css/icons/icons.svg')
-            .then(response => response.text())
-            .then(svg => {
-                document.getElementById('svg-container').innerHTML = svg;
-            });
-            
-        var nes;
-        $(function() {
-            nes = new JSNES({
-                'ui': $('#emulator').JSNESUI({
-                    "动作冒险": [
-                        ['超级马里奥1 Super Mario Bros.', 'roms/(W) Super Mario Bros. [!].nes'],
-                        ['超级马里奥3 Super Mario Bros. 3', 'roms/Super Mario Bros. 3 (U) (PRG1) [!].nes'],
-                        ['魂斗罗1 Contra (简单版)', 'roms/Contra1(U)30S.nes'],
-                        ['魂斗罗1 Contra (普通版)', 'roms/Contra1(U)30M.nes'],
-                        ['魂斗罗1 Contra (困难版)', 'roms/Contra1(U)30H.nes'],
-                        ['忍者龙剑传1 Ninja Gaiden', 'roms/Ninja_Gaiden1.nes'],
-                        ['忍者龙剑传2 Ninja Gaiden 2', 'roms/Ninja_Gaiden2.nes'],
-                        ['忍者龙剑传3 Ninja Gaiden 3', 'roms/Ninja_Gaiden3.nes'],
-                        ['双截龙1 Double Dragon', 'roms/Double Dragon1.nes'],
-                        ['双截龙2 Double Dragon 2', 'roms/Double Dragon2.nes'],
-                        ['双截龙3 Double Dragon 3', 'roms/Double Dragon3.nes'],
-                        ['双截龙4 Double Dragon 4', 'roms/Double Dragon4.nes'],
-                        ['赤影战士 Kage', 'roms/Kage.nes'],
-                        ['冒险岛1 Adventure Island', 'roms/(J) Takahashi Meijin no Bouken Shima [!].nes'],
-                        ['塞尔达传说2 Zelda II', 'roms/Zelda II - The Adventure of Link (U).nes']
-                    ],
-                    "射击格斗": [
-                        ['沙罗曼蛇 Life Force', 'roms/Life Force [!].nes'],
-                        ['1943', 'roms/1943.nes'],
-                        ['功夫 Yie Ar Kung-Fu', 'roms/(J) (V1.2) Yie Ar Kung-Fu [!].nes'],
-                        ['脱狱 Cross Fire', 'roms/Cross Fire (J).nes'],
-                        ['战场之狐 Jackal', 'roms/Jackal.nes'],
-                        ['最终格斗 Mighty Final Fight', 'roms/Mighty Final Fight.nes']
-                    ],
-                    "休闲益智": [
-                        ['俄罗斯方块1 Tetris', 'roms/Tetris (U) [!].nes'],
-                        ['俄罗斯方块2 Tetris 2', 'roms/Tetris 2 (U) [!].nes'],
-                        ['泡泡龙 Bubble Bobble', 'roms/Bubble Bobble (U).nes'],
-                        ['彩虹岛 Rainbow Islands', 'roms/Rainbow Islands.nes'],
-                        ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
-                        ['打砖块 Arkanoid', 'roms/(J) Arkanoid [!].nes'],
-                        ['挖地先生 Spelunker', 'roms/(J) Spelunker [!].nes'],
-                        ['淘金者 TaoJinZhe', 'roms/TaoJinZhe.nes'],
-                        ['马里奥医生 Dr. Mario', 'roms/Dr. Mario (JU).nes']
-                    ],
-                    "竞速体育": [
-                        ['越野机车 Excitebike', 'roms/(JU) Excitebike [!].nes'],
-                        ['火箭车 Road Fighter', 'roms/(J) Road Fighter [!].nes'],
-                        ['F1赛车 F-1 Race', 'roms/(J) F-1 Race [!].nes'],
-                        ['网球 Tennis', 'roms/Tennis (JU) [!].nes'],
-                        ['高尔夫 Golf', 'roms/Golf (JU).nes']
-                    ],
-                    "经典街机": [
-                        ['坦克大战 Battle City', 'roms/(J) Battle City.nes'],
-                        ['炸弹人 Bomberman', 'roms/(J) Bomberman [!].nes'],
-                        ['小蜜蜂 Galaxian', 'roms/(J) Galaxian [!].nes'],
-                        ['挖金子 Lode Runner', 'roms/Championship Lode Runner (J).nes'],
-                        ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
-                        ['南极冒险 Antarctic Adventure', 'roms/(J) Antarctic Adventure [!].nes'],
-                        ['迪格达格 Dig Dug', 'roms/(J) Dig Dug [!].nes'],
-                        ['马皮 Mappy', 'roms/(J) Mappy [!].nes']
-                    ],
-                    "棋牌游戏": [
-                        ['中国象棋', 'roms/Zhong Guo Xiang Qi.nes'],
-                        ['五子棋', 'roms/5.nes'],
-                        ['麻将', 'roms/(Hacker) AV Mahjongg.nes']
-                    ]
-                })
-            });
+  <!-- 移动端虚拟按键 -->
+  <div class="mobile-controls">
+    <div class="controls-container">
+      <!-- 左侧方向键 -->
+      <div class="direction-pad">
+        <div class="direction-button up-button" data-key="up"></div>
+        <div class="direction-button down-button" data-key="down"></div>
+        <div class="direction-button left-button" data-key="left"></div>
+        <div class="direction-button right-button" data-key="right"></div>
+      </div>
+
+      <!-- 中间系统按钮 -->
+      <div class="system-buttons">
+        <div class="system-button" data-key="select">SELECT</div>
+        <div class="system-button" data-key="start">START</div>
+      </div>
+
+      <!-- 右侧动作按钮 -->
+      <div class="action-buttons">
+        <div class="action-button" data-key="B">B</div>
+        <div class="action-button" data-key="A">A</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="lib/dynamicaudio-min.js"></script>
+  <script type="text/javascript" src="source/nes.js"></script>
+  <script type="text/javascript" src="source/utils.js"></script>
+  <script type="text/javascript" src="source/cpu.js"></script>
+  <script type="text/javascript" src="source/keyboard.js"></script>
+  <script type="text/javascript" src="source/mappers.js"></script>
+  <script type="text/javascript" src="source/papu.js"></script>
+  <script type="text/javascript" src="source/ppu.js"></script>
+  <script type="text/javascript" src="source/rom.js"></script>
+  <script type="text/javascript" src="source/ui.js"></script>
+
+  <script type="text/javascript">
+    // 加载SVG图标
+    fetch('css/icons/icons.svg')
+      .then(response => response.text())
+      .then(svg => {
+        document.getElementById('svg-container').innerHTML = svg;
+      });
+
+    var nes;
+    $(function () {
+      // 初始化移动端控制器
+      setupMobileControls();
+
+      nes = new JSNES({
+        'ui': $('#emulator').JSNESUI({
+          "动作冒险": [
+            ['超级马里奥1 Super Mario Bros.', 'roms/(W) Super Mario Bros. [!].nes'],
+            ['超级马里奥3 Super Mario Bros. 3', 'roms/Super Mario Bros. 3 (U) (PRG1) [!].nes'],
+            ['魂斗罗1 Contra (简单版)', 'roms/Contra1(U)30S.nes'],
+            ['魂斗罗1 Contra (普通版)', 'roms/Contra1(U)30M.nes'],
+            ['魂斗罗1 Contra (困难版)', 'roms/Contra1(U)30H.nes'],
+            ['忍者龙剑传1 Ninja Gaiden', 'roms/Ninja_Gaiden1.nes'],
+            ['忍者龙剑传2 Ninja Gaiden 2', 'roms/Ninja_Gaiden2.nes'],
+            ['忍者龙剑传3 Ninja Gaiden 3', 'roms/Ninja_Gaiden3.nes'],
+            ['双截龙1 Double Dragon', 'roms/Double Dragon1.nes'],
+            ['双截龙2 Double Dragon 2', 'roms/Double Dragon2.nes'],
+            ['双截龙3 Double Dragon 3', 'roms/Double Dragon3.nes'],
+            ['双截龙4 Double Dragon 4', 'roms/Double Dragon4.nes'],
+            ['赤影战士 Kage', 'roms/Kage.nes'],
+            ['冒险岛1 Adventure Island', 'roms/(J) Takahashi Meijin no Bouken Shima [!].nes'],
+            ['塞尔达传说2 Zelda II', 'roms/Zelda II - The Adventure of Link (U).nes']
+          ],
+          "射击格斗": [
+            ['沙罗曼蛇 Life Force', 'roms/Life Force [!].nes'],
+            ['1943', 'roms/1943.nes'],
+            ['功夫 Yie Ar Kung-Fu', 'roms/(J) (V1.2) Yie Ar Kung-Fu [!].nes'],
+            ['脱狱 Cross Fire', 'roms/Cross Fire (J).nes'],
+            ['战场之狐 Jackal', 'roms/Jackal.nes'],
+            ['最终格斗 Mighty Final Fight', 'roms/Mighty Final Fight.nes']
+          ],
+          "休闲益智": [
+            ['俄罗斯方块1 Tetris', 'roms/Tetris (U) [!].nes'],
+            ['俄罗斯方块2 Tetris 2', 'roms/Tetris 2 (U) [!].nes'],
+            ['泡泡龙 Bubble Bobble', 'roms/Bubble Bobble (U).nes'],
+            ['彩虹岛 Rainbow Islands', 'roms/Rainbow Islands.nes'],
+            ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
+            ['打砖块 Arkanoid', 'roms/(J) Arkanoid [!].nes'],
+            ['挖地先生 Spelunker', 'roms/(J) Spelunker [!].nes'],
+            ['淘金者 TaoJinZhe', 'roms/TaoJinZhe.nes'],
+            ['马里奥医生 Dr. Mario', 'roms/Dr. Mario (JU).nes']
+          ],
+          "竞速体育": [
+            ['越野机车 Excitebike', 'roms/(JU) Excitebike [!].nes'],
+            ['火箭车 Road Fighter', 'roms/(J) Road Fighter [!].nes'],
+            ['F1赛车 F-1 Race', 'roms/(J) F-1 Race [!].nes'],
+            ['网球 Tennis', 'roms/Tennis (JU) [!].nes'],
+            ['高尔夫 Golf', 'roms/Golf (JU).nes']
+          ],
+          "经典街机": [
+            ['坦克大战 Battle City', 'roms/(J) Battle City.nes'],
+            ['炸弹人 Bomberman', 'roms/(J) Bomberman [!].nes'],
+            ['小蜜蜂 Galaxian', 'roms/(J) Galaxian [!].nes'],
+            ['挖金子 Lode Runner', 'roms/Championship Lode Runner (J).nes'],
+            ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
+            ['南极冒险 Antarctic Adventure', 'roms/(J) Antarctic Adventure [!].nes'],
+            ['迪格达格 Dig Dug', 'roms/(J) Dig Dug [!].nes'],
+            ['马皮 Mappy', 'roms/(J) Mappy [!].nes']
+          ],
+          "棋牌游戏": [
+            ['中国象棋', 'roms/Zhong Guo Xiang Qi.nes'],
+            ['五子棋', 'roms/5.nes'],
+            ['麻将', 'roms/(Hacker) AV Mahjongg.nes']
+          ]
+        })
+      });
+    });
+
+    // 移动端控制器处理
+    function setupMobileControls() {
+      const buttons = document.querySelectorAll('.direction-button, .action-button, .system-button');
+      const keyMap = {
+        'up': 38,    // 上箭头
+        'down': 40,  // 下箭头
+        'left': 37,  // 左箭头
+        'right': 39, // 右箭头
+        'a': 90,     // Z键
+        'b': 88,     // X键
+        'select': 17, // Ctrl键
+        'start': 13   // Enter键
+      };
+
+      function simulateKeyEvent(type, keyCode) {
+        const event = new KeyboardEvent(type, {
+          keyCode: keyCode,
+          bubbles: true,
+          cancelable: true
+        });
+        document.dispatchEvent(event);
+      }
+
+      buttons.forEach(button => {
+        const key = button.dataset.key;
+        const keyCode = keyMap[key];
+
+        // 处理触摸事件
+        button.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          simulateKeyEvent('keydown', keyCode);
         });
 
-        // 移动端控制器处理
-        function setupMobileControls() {
-            const buttons = document.querySelectorAll('.direction-button, .action-button');
-            const keyMap = {
-                'up': 38,    // 上箭头
-                'down': 40,  // 下箭头
-                'left': 37,  // 左箭头
-                'right': 39, // 右箭头
-                'a': 88,     // X键
-                'b': 90,     // Z键
-                'select': 17, // Ctrl键
-                'start': 13   // Enter键
-            };
+        button.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          simulateKeyEvent('keyup', keyCode);
+        });
 
-            function simulateKeyEvent(type, keyCode) {
-                const event = new KeyboardEvent(type, {
-                    keyCode: keyCode,
-                    bubbles: true,
-                    cancelable: true
-                });
-                document.dispatchEvent(event);
-            }
+        // 处理鼠标事件（用于测试）
+        button.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          simulateKeyEvent('keydown', keyCode);
+        });
 
-            buttons.forEach(button => {
-                const key = button.dataset.key;
-                const keyCode = keyMap[key];
+        button.addEventListener('mouseup', (e) => {
+          e.preventDefault();
+          simulateKeyEvent('keyup', keyCode);
+        });
+      });
 
-                // 处理触摸事件
-                button.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    simulateKeyEvent('keydown', keyCode);
-                });
-
-                button.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    simulateKeyEvent('keyup', keyCode);
-                });
-
-                // 处理鼠标事件（用于测试）
-                button.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    simulateKeyEvent('keydown', keyCode);
-                });
-
-                button.addEventListener('mouseup', (e) => {
-                    e.preventDefault();
-                    simulateKeyEvent('keyup', keyCode);
-                });
-            });
-
-            // 阻止页面滚动
-            document.addEventListener('touchmove', (e) => {
-                if (e.target.closest('.mobile-controls')) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+      // 阻止页面滚动
+      document.addEventListener('touchmove', (e) => {
+        if (e.target.closest('.mobile-controls')) {
+          e.preventDefault();
         }
-    </script>
+      });
+    }
+  </script>
 </body>
+
 </html>

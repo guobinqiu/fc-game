@@ -44,24 +44,22 @@ JSNES.Keyboard = function() {
 JSNES.Keyboard.prototype = {
     setKey: function(key, value) {
         switch (key) {
-            // Player1
-            case 87: this.state1[this.keys.KEY_UP] = value; break;     // UP: W(87)
-            case 83: this.state1[this.keys.KEY_DOWN] = value; break;   // DOWN: S(83)
-            case 65: this.state1[this.keys.KEY_LEFT] = value; break;   // LEFT: A(65)
-            case 68: this.state1[this.keys.KEY_RIGHT] = value; break;  // RIGHT: D(68)
-            case 75: this.state1[this.keys.KEY_B] = value; break;      // B: K(75)
-            case 74: this.state1[this.keys.KEY_A] = value; break;      // A: J(74)
-            case 32: this.state1[this.keys.KEY_SELECT] = value; break; // SELECT: SPACE(32)
-            case 13: this.state1[this.keys.KEY_START] = value; break;  // START: ENTER(13)
-            // Player2
-            case 87: this.state1[this.keys.KEY_UP] = value; break;     // Up 38
-            case 83: this.state1[this.keys.KEY_DOWN] = value; break;   // Down 40
-            case 65: this.state1[this.keys.KEY_LEFT] = value; break;   // Left 37
-            case 68: this.state1[this.keys.KEY_RIGHT] = value; break;  // Right 39
-            case 98: this.state2[this.keys.KEY_B] = value; break;     // B: Num2(98)
-            case 97: this.state2[this.keys.KEY_A] = value; break;     // A: Num1(97)
-            case 111: this.state2[this.keys.KEY_SELECT] = value; break; // SELECT: NumpadDivide(111)
-            case 106: this.state2[this.keys.KEY_START] = value; break;  // START: NumpadMultiply(106)
+            // Player1 - 主要控制
+            case 38: this.state1[this.keys.KEY_UP] = value; break;     // UP: Arrow Up(38)
+            case 40: this.state1[this.keys.KEY_DOWN] = value; break;   // DOWN: Arrow Down(40)
+            case 37: this.state1[this.keys.KEY_LEFT] = value; break;   // LEFT: Arrow Left(37)
+            case 39: this.state1[this.keys.KEY_RIGHT] = value; break;  // RIGHT: Arrow Right(39)
+            case 88: this.state1[this.keys.KEY_B] = value; break;      // B: X(88)
+            case 90: this.state1[this.keys.KEY_A] = value; break;      // A: Z(90)
+            case 17: this.state1[this.keys.KEY_SELECT] = value; break; // SELECT: Ctrl(17)
+            case 13: this.state1[this.keys.KEY_START] = value; break;  // START: Enter(13)
+            // Player2 - 仅方向和AB键
+            case 87: this.state2[this.keys.KEY_UP] = value; break;     // Up: W(87)
+            case 83: this.state2[this.keys.KEY_DOWN] = value; break;   // Down: S(83)
+            case 65: this.state2[this.keys.KEY_LEFT] = value; break;   // Left: A(65)
+            case 68: this.state2[this.keys.KEY_RIGHT] = value; break;  // Right: D(68)
+            case 75: this.state2[this.keys.KEY_B] = value; break;      // B: K(75)
+            case 74: this.state2[this.keys.KEY_A] = value; break;      // A: J(74)
             default: return true;
         }
         return false; // preventDefault
