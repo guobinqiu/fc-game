@@ -17,7 +17,7 @@
 
 ```
 https://guobinqiu.github.io/nesgame/
-https://nesgame-939.pages.dev/
+https://nesgame-f14.pages.dev/
 ```
 
 ## 本地运行
@@ -27,4 +27,3 @@ python3 -m http.server 8888
 http://localhost:8888/
 ```
 
-![image](https://github.com/user-attachments/assets/6ce51e22-b52a-47a7-bcbc-5f891567c164)
