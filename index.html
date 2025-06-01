@@ -80,6 +80,7 @@
   <script type="text/javascript" src="source/papu.js"></script>
   <script type="text/javascript" src="source/ppu.js"></script>
   <script type="text/javascript" src="source/rom.js"></script>
+  <script type="text/javascript" src="source/rom-cache.js"></script>
   <script type="text/javascript" src="source/ui.js"></script>
 
   <script type="text/javascript">
@@ -90,12 +91,78 @@
         document.getElementById('svg-container').innerHTML = svg;
       });
 
-    var nes;
-    $(function () {
-      // 初始化移动端控制器
-      setupMobileControls();
-
-      nes = new JSNES({
+    // 初始化ROM缓存系统
+    ROMCache.init().then(() => {
+      var nes = new JSNES({
+        'ui': $('#emulator').JSNESUI({
+          "角色扮演":[
+            ['吞食天地', 'roms/2717.nes'],
+            ['吞食天地 (汉化)', 'roms/2722.nes'],
+            ['塞尔达传说2 Zelda II', 'roms/Zelda II - The Adventure of Link (U).nes']
+          ],
+          "动作冒险": [
+            ['超级马里奥1 Super Mario Bros.', 'roms/(W) Super Mario Bros. [!].nes'],
+            ['超级马里奥3 Super Mario Bros. 3', 'roms/Super Mario Bros. 3 (U) (PRG1) [!].nes'],
+            ['魂斗罗1 Contra (简单版)', 'roms/Contra1(U)30S.nes'],
+            ['魂斗罗1 Contra (普通版)', 'roms/Contra1(U)30M.nes'],
+            ['魂斗罗1 Contra (困难版)', 'roms/Contra1(U)30H.nes'],
+            ['忍者龙剑传1 Ninja Gaiden', 'roms/Ninja_Gaiden1.nes'],
+            ['忍者龙剑传2 Ninja Gaiden 2', 'roms/Ninja_Gaiden2.nes'],
+            ['忍者龙剑传3 Ninja Gaiden 3', 'roms/Ninja_Gaiden3.nes'],
+            ['双截龙1 Double Dragon', 'roms/Double Dragon1.nes'],
+            ['双截龙2 Double Dragon 2', 'roms/Double Dragon2.nes'],
+            ['双截龙3 Double Dragon 3', 'roms/Double Dragon3.nes'],
+            ['双截龙4 Double Dragon 4', 'roms/Double Dragon4.nes'],
+            ['赤影战士 Kage', 'roms/Kage.nes'],
+            ['冒险岛1 Adventure Island', 'roms/(J) Takahashi Meijin no Bouken Shima [!].nes']
+          ],
+          "射击格斗": [
+            ['沙罗曼蛇 Life Force', 'roms/Life Force [!].nes'],
+            ['1943', 'roms/1943.nes'],
+            ['功夫 Yie Ar Kung-Fu', 'roms/(J) (V1.2) Yie Ar Kung-Fu [!].nes'],
+            ['脱狱 Cross Fire', 'roms/Cross Fire (J).nes'],
+            ['战场之狐 Jackal', 'roms/Jackal.nes'],
+            ['最终格斗 Mighty Final Fight', 'roms/Mighty Final Fight.nes']
+          ],
+          "休闲益智": [
+            ['俄罗斯方块1 Tetris', 'roms/Tetris (U) [!].nes'],
+            ['俄罗斯方块2 Tetris 2', 'roms/Tetris 2 (U) [!].nes'],
+            ['泡泡龙 Bubble Bobble', 'roms/Bubble Bobble (U).nes'],
+            ['彩虹岛 Rainbow Islands', 'roms/Rainbow Islands.nes'],
+            ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
+            ['打砖块 Arkanoid', 'roms/(J) Arkanoid [!].nes'],
+            ['挖地先生 Spelunker', 'roms/(J) Spelunker [!].nes'],
+            ['淘金者 TaoJinZhe', 'roms/TaoJinZhe.nes'],
+            ['马里奥医生 Dr. Mario', 'roms/Dr. Mario (JU).nes']
+          ],
+          "竞速体育": [
+            ['越野机车 Excitebike', 'roms/(JU) Excitebike [!].nes'],
+            ['火箭车 Road Fighter', 'roms/(J) Road Fighter [!].nes'],
+            ['F1赛车 F-1 Race', 'roms/(J) F-1 Race [!].nes'],
+            ['网球 Tennis', 'roms/Tennis (JU) [!].nes'],
+            ['高尔夫 Golf', 'roms/Golf (JU).nes']
+          ],
+          "经典街机": [
+            ['坦克大战 Battle City', 'roms/(J) Battle City.nes'],
+            ['炸弹人 Bomberman', 'roms/(J) Bomberman [!].nes'],
+            ['小蜜蜂 Galaxian', 'roms/(J) Galaxian [!].nes'],
+            ['挖金子 Lode Runner', 'roms/Championship Lode Runner (J).nes'],
+            ['马戏团 Circus Charlie', 'roms/(J) Circus Charlie [!].nes'],
+            ['南极冒险 Antarctic Adventure', 'roms/(J) Antarctic Adventure [!].nes'],
+            ['迪格达格 Dig Dug', 'roms/(J) Dig Dug [!].nes'],
+            ['马皮 Mappy', 'roms/(J) Mappy [!].nes']
+          ],
+          "棋牌游戏": [
+            ['中国象棋', 'roms/Zhong Guo Xiang Qi.nes'],
+            ['五子棋', 'roms/5.nes'],
+            ['麻将', 'roms/(Hacker) AV Mahjongg.nes']
+          ]
+        })
+      });
+    }).catch(error => {
+      console.error('ROM缓存系统初始化失败:', error);
+      // 降级：不使用缓存继续运行
+      var nes = new JSNES({
         'ui': $('#emulator').JSNESUI({
           "角色扮演":[
             ['吞食天地', 'roms/2717.nes'],

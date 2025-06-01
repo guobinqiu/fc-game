@@ -151,46 +151,44 @@ if (typeof jQuery !== 'undefined') {
             self.nes.stop();
           }
 
-          $.ajax({
-            url: escape(self.romSelect.val()),
-            xhr: function () {
-              var xhr = $.ajaxSettings.xhr();
-              if (typeof xhr.overrideMimeType !== 'undefined') {
-                // Download as binary
-                xhr.overrideMimeType('text/plain; charset=x-user-defined');
-              }
-              self.xhr = xhr;
-              return xhr;
-            },
-            success: function (data, status, xhr) {
-              try {
-                if (JSNES.Utils.isIE()) {
-                  var charCodes = JSNESBinaryToArray(
-                    xhr.responseBody
-                  ).toArray();
-                  data = String.fromCharCode.apply(
-                    undefined,
-                    charCodes
-                  );
-                }
-
-                self.nes.loadRom(data);
-                self.updateStatus("游戏加载成功！");
-
-                // 延迟一帧后启动，让UI有时间更新
-                setTimeout(function () {
-                  self.nes.start();
-                  self.enable();
-                }, 0);
-              } catch (error) {
-                self.updateStatus("游戏加载失败: " + error.message);
-                console.error("ROM loading error:", error);
-              }
-            },
-            error: function (xhr, status, error) {
-              self.updateStatus("游戏加载失败");
-              console.error("ROM download error:", status, error);
+          // 将 Uint8Array 转换为字符串的辅助函数
+          function uint8ArrayToString(uint8Array) {
+            const CHUNK_SIZE = 8192;  // 每次处理8KB
+            let result = '';
+            for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
+              const chunk = uint8Array.slice(i, i + CHUNK_SIZE);
+              result += String.fromCharCode.apply(null, chunk);
             }
+            return result;
+          }
+
+          fetch(escape(self.romSelect.val()), {
+            headers: {
+              'Accept': 'application/octet-stream'
+            }
+          })
+          .then(response => response.arrayBuffer())
+          .then(arrayBuffer => {
+            const data = new Uint8Array(arrayBuffer);
+            try {
+              // 分块处理数据
+              const romData = uint8ArrayToString(data);
+              self.nes.loadRom(romData);
+              self.updateStatus("游戏加载成功！");
+
+              // 使用 requestAnimationFrame 确保UI更新后再启动
+              requestAnimationFrame(function () {
+                self.nes.start();
+                self.enable();
+              });
+            } catch (error) {
+              self.updateStatus("游戏加载失败: " + error.message);
+              console.error("ROM loading error:", error);
+            }
+          })
+          .catch(error => {
+            self.updateStatus("游戏加载失败");
+            console.error("ROM download error:", error);
           });
         },
 
