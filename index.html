@@ -29,16 +29,6 @@
   <div class="main">
     <div class="controls">
       <select id="rom-select"></select>
-      <button id="btn-pause">
-        <svg class="icon">
-          <use href="#icon-pause" />
-        </svg>
-      </button>
-      <button id="btn-restart">
-        <svg class="icon">
-          <use href="#icon-restart" />
-        </svg>
-      </button>
       <button id="btn-sound">
         <svg class="icon">
           <use href="#icon-volume-high" />
@@ -107,6 +97,11 @@
 
       nes = new JSNES({
         'ui': $('#emulator').JSNESUI({
+          "角色扮演":[
+            ['吞食天地', 'roms/2717.nes'],
+            ['吞食天地 (汉化)', 'roms/2722.nes'],
+            ['塞尔达传说2 Zelda II', 'roms/Zelda II - The Adventure of Link (U).nes']
+          ],
           "动作冒险": [
             ['超级马里奥1 Super Mario Bros.', 'roms/(W) Super Mario Bros. [!].nes'],
             ['超级马里奥3 Super Mario Bros. 3', 'roms/Super Mario Bros. 3 (U) (PRG1) [!].nes'],
@@ -121,8 +116,7 @@
             ['双截龙3 Double Dragon 3', 'roms/Double Dragon3.nes'],
             ['双截龙4 Double Dragon 4', 'roms/Double Dragon4.nes'],
             ['赤影战士 Kage', 'roms/Kage.nes'],
-            ['冒险岛1 Adventure Island', 'roms/(J) Takahashi Meijin no Bouken Shima [!].nes'],
-            ['塞尔达传说2 Zelda II', 'roms/Zelda II - The Adventure of Link (U).nes']
+            ['冒险岛1 Adventure Island', 'roms/(J) Takahashi Meijin no Bouken Shima [!].nes']
           ],
           "射击格斗": [
             ['沙罗曼蛇 Life Force', 'roms/Life Force [!].nes'],

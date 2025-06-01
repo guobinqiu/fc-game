@@ -23,8 +23,8 @@
   position: absolute;
   left: 30px;
   bottom: 40px;
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
   pointer-events: auto;
   touch-action: none;
   user-select: none;
@@ -34,8 +34,8 @@
 
 .direction-button {
   position: absolute;
-  width: 45px;
-  height: 45px;
+  width: 55px;
+  height: 55px;
   background: rgba(255, 255, 255, 0.2);
   border: 2.5px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;

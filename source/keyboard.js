@@ -50,16 +50,49 @@ JSNES.Keyboard = function () {
 };
 
 JSNES.Keyboard.prototype = {
+  // 重置按键状态
   resetState: function () {
     for (var i = 0; i < 8; i++) {
       this.state[i] = 0x40;
     }
   },
 
+  // 检查是否应该处理键盘事件
+  shouldHandleKeyEvent: function(evt) {
+    // 如果是移动设备的模拟事件，始终处理
+    if (evt.isTrusted === false) {
+      return true;
+    }
+    // 检查事件是否来自输入框
+    if (evt.target.tagName === 'INPUT' || evt.target.tagName === 'TEXTAREA') {
+      return false;
+    }
+    // 检查是否按下了控制键
+    if (evt.ctrlKey || evt.altKey || evt.metaKey) {
+      return false;
+    }
+    return true;
+  },
+
+  // 按键映射表
+  keyCodeMap: {
+    38: 4, // Up
+    40: 5, // Down
+    37: 6, // Left
+    39: 7, // Right
+    90: 0, // Z (PC端 B)
+    88: 1, // X (PC端 A)
+    65: 0, // A (手机端 B)
+    66: 1, // B (手机端 A)
+    17: 2, // Control (Select)
+    13: 3  // Enter (Start)
+  },
+
   keyDown: function (evt) {
     var key = evt.keyCode;
     if (key in this.keyCodeMap) {
       this.state[this.keyCodeMap[key]] = 0x41;
+      evt.preventDefault();
     }
   },
 
@@ -67,20 +100,7 @@ JSNES.Keyboard.prototype = {
     var key = evt.keyCode;
     if (key in this.keyCodeMap) {
       this.state[this.keyCodeMap[key]] = 0x40;
+      evt.preventDefault();
     }
-  },
-
-  // 键盘映射表（保持原有映射）
-  keyCodeMap: {
-    38: 4, // Up
-    40: 5, // Down
-    37: 6, // Left
-    39: 7, // Right
-    90: 0, // Z (PC端 A)
-    88: 1, // X (PC端 B)
-    65: 0, // A (手机端 A)
-    66: 1, // B (手机端 B)
-    17: 2, // Control (Select)
-    13: 3  // Enter (Start)
   }
 };

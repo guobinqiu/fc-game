@@ -47,8 +47,6 @@ if (typeof jQuery !== 'undefined') {
         self.romSelect = $('#rom-select');
 
         self.buttons = {
-          pause: $('#btn-pause'),
-          restart: $('#btn-restart'),
           sound: $('#btn-sound')
         };
 
@@ -67,24 +65,6 @@ if (typeof jQuery !== 'undefined') {
         /*
          * Buttons
          */
-        self.buttons.pause.click(function () {
-          if (self.nes.isRunning) {
-            self.nes.stop();
-            self.updateStatus("Paused");
-            self.buttons.pause.find('use').attr('href', '#icon-play');
-          }
-          else {
-            self.nes.start();
-            self.buttons.pause.find('use').attr('href', '#icon-pause');
-          }
-        });
-
-        self.buttons.restart.click(function () {
-          self.nes.reloadRom();
-          self.nes.start();
-          self.buttons.pause.find('use').attr('href', '#icon-pause');
-        });
-
         self.buttons.sound.click(function () {
           if (self.nes.opts.emulateSound) {
             self.nes.opts.emulateSound = false;
@@ -225,15 +205,6 @@ if (typeof jQuery !== 'undefined') {
         },
 
         enable: function () {
-          this.buttons.pause.attr("disabled", null);
-          if (this.nes.isRunning) {
-            this.buttons.pause.find('use').attr('href', '#icon-pause');
-          }
-          else {
-            this.buttons.pause.find('use').attr('href', '#icon-play');
-          }
-          this.buttons.restart.attr("disabled", null);
-          this.buttons.sound.attr("disabled", null);
           if (this.nes.opts.emulateSound) {
             this.buttons.sound.find('use').attr('href', '#icon-volume-high');
           }
@@ -289,6 +260,11 @@ if (typeof jQuery !== 'undefined') {
         },
 
         writeFrame: function () {
+          // 确保nes和ppu已经初始化
+          if (!this.nes || !this.nes.ppu || !this.nes.ppu.buffer) {
+            return;
+          }
+
           // Get the frame data from the emulator
           var buffer = this.nes.ppu.buffer;
           var prevBuffer = this.prevBuffer;
