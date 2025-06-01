@@ -20,13 +20,16 @@
 
 /* 方向键区域 */
 .direction-pad {
-  position: fixed; /* 改为fixed定位以确保位置固定 */
+  position: absolute;
   left: 30px;
   bottom: 40px;
   width: 140px;
   height: 140px;
   pointer-events: auto;
-  z-index: 999; /* 确保在其他元素之上 */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .direction-button {
@@ -40,12 +43,10 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(2px);
   transition: all 0.2s ease;
-  touch-action: manipulation; /* 防止触摸移动 */
+  touch-action: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation; /* 防止触摸移动 */
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* 方向按钮箭头 */
@@ -116,24 +117,28 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  touch-action: none;
 }
 
 .down-button {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+  touch-action: none;
 }
 
 .left-button {
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  touch-action: none;
 }
 
 .right-button {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  touch-action: none;
 }
 
 /* 系统按钮区域 */
@@ -146,6 +151,10 @@
   gap: 25px;
   pointer-events: auto;
   z-index: 1000;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* 系统按钮样式 */
@@ -178,6 +187,10 @@
   gap: 20px;
   pointer-events: auto;
   transform: rotate(-35deg);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* AB按钮样式 */
@@ -195,6 +208,10 @@
   font-weight: normal;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* 按钮激活效果 */

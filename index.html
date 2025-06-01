@@ -183,6 +183,9 @@
         'start': 13   // Enter键
       };
 
+      // 记录当前按下的按钮
+      const activeButtons = new Set();
+
       function simulateKeyEvent(type, keyCode) {
         const event = new KeyboardEvent(type, {
           keyCode: keyCode,
@@ -190,6 +193,14 @@
           cancelable: true
         });
         document.dispatchEvent(event);
+      }
+
+      // 处理触摸结束时释放所有按键
+      function releaseAllButtons() {
+        activeButtons.forEach(keyCode => {
+          simulateKeyEvent('keyup', keyCode);
+        });
+        activeButtons.clear();
       }
 
       buttons.forEach(button => {
@@ -200,27 +211,53 @@
         button.addEventListener('touchstart', (e) => {
           e.preventDefault();
           e.stopPropagation();
+          activeButtons.add(keyCode);
           simulateKeyEvent('keydown', keyCode);
-        });
+        }, { passive: false });
 
-        // 移除触摸移动事件处理以防止方向键随触摸移动
-        
         button.addEventListener('touchend', (e) => {
           e.preventDefault();
           e.stopPropagation();
+          activeButtons.delete(keyCode);
           simulateKeyEvent('keyup', keyCode);
-        });
+        }, { passive: false });
+
+        button.addEventListener('touchcancel', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        }, { passive: false });
 
         // 处理鼠标事件（用于测试）
         button.addEventListener('mousedown', (e) => {
           e.preventDefault();
+          e.stopPropagation();
+          activeButtons.add(keyCode);
           simulateKeyEvent('keydown', keyCode);
         });
 
         button.addEventListener('mouseup', (e) => {
           e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
           simulateKeyEvent('keyup', keyCode);
         });
+
+        button.addEventListener('mouseleave', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        });
+      });
+
+      // 页面失焦时释放所有按键
+      window.addEventListener('blur', releaseAllButtons);
+      window.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          releaseAllButtons();
+        }
       });
 
       // 阻止页面滚动和缩放
