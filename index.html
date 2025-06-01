@@ -203,12 +203,8 @@
           simulateKeyEvent('keydown', keyCode);
         });
 
-        // 新增触摸移动事件处理
-        button.addEventListener('touchmove', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        });
-
+        // 移除触摸移动事件处理以防止方向键随触摸移动
+        
         button.addEventListener('touchend', (e) => {
           e.preventDefault();
           e.stopPropagation();
