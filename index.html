@@ -260,20 +260,22 @@
         }
       });
 
-      // 阻止页面滚动和缩放
-      document.addEventListener('touchmove', (e) => {
-        if (e.target.closest('.mobile-controls')) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
+      // 阻止移动控制区域的滚动和缩放
+      document.querySelector('.mobile-controls').addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
       }, { passive: false });
 
-      document.addEventListener('touchstart', (e) => {
-        // 仅阻止非移动控制区域的触摸事件
-        if (!e.target.closest('.mobile-controls')) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
+      // 阻止游戏画面区域的滚动和缩放
+      document.querySelector('.screen').addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, { passive: false });
+
+      // 阻止游戏画面区域的触摸事件
+      document.querySelector('.screen').addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
       }, { passive: false });
     }
   </script>
