@@ -43,6 +43,9 @@
   touch-action: manipulation; /* 防止触摸移动 */
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* 防止触摸移动 */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* 方向按钮箭头 */
