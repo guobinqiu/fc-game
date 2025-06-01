@@ -20,12 +20,13 @@
 
 /* 方向键区域 */
 .direction-pad {
-  position: absolute;
+  position: fixed; /* 改为fixed定位以确保位置固定 */
   left: 30px;
   bottom: 40px;
   width: 140px;
   height: 140px;
   pointer-events: auto;
+  z-index: 999; /* 确保在其他元素之上 */
 }
 
 .direction-button {
@@ -39,6 +40,9 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(2px);
   transition: all 0.2s ease;
+  touch-action: manipulation; /* 防止触摸移动 */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* 方向按钮箭头 */
