@@ -56,21 +56,6 @@ JSNES.Keyboard.prototype = {
     }
   },
 
-  // 判断是否应该处理按键事件
-  shouldHandleKeyEvent: function (evt) {
-    // 如果是移动设备，只过滤方向键
-    if (this.isMobileDevice) {
-      var key = evt.keyCode;
-      // 只过滤方向键，其他按键（包括 A/B 按钮）正常工作
-      if (key === 37 || key === 38 || key === 39 || key === 40) {
-        // 确保只在这些按键被按下时阻止默认行为
-        evt.preventDefault();
-        return false;
-      }
-    }
-    return true;
-  },
-
   keyDown: function (evt) {
     var key = evt.keyCode;
     if (key in this.keyCodeMap) {
