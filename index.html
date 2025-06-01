@@ -232,7 +232,8 @@
       }, { passive: false });
 
       document.addEventListener('touchstart', (e) => {
-        if (e.target.closest('.mobile-controls')) {
+        // 仅阻止非移动控制区域的触摸事件
+        if (!e.target.closest('.mobile-controls')) {
           e.preventDefault();
           e.stopPropagation();
         }
