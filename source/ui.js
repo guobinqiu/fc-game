@@ -69,10 +69,18 @@ if (typeof jQuery !== 'undefined') {
           if (self.nes.opts.emulateSound) {
             self.nes.opts.emulateSound = false;
             self.buttons.sound.find('use').attr('href', '#icon-volume-xmark');
+            if (self.audio) {
+              self.audio.suspend();
+            }
           }
           else {
             self.nes.opts.emulateSound = true;
             self.buttons.sound.find('use').attr('href', '#icon-volume-high');
+            if (self.audio) {
+              self.audio.resume().catch(function(e) {
+                console.log("Error resuming audio:", e);
+              });
+            }
           }
         });
 
@@ -116,6 +124,39 @@ if (typeof jQuery !== 'undefined') {
 
         self.resetCanvas();
 
+        /*
+         * Lightgun experiment
+         
+        $(document).mousedown(function(e) {
+          if (self.nes.mmap) {
+            self.nes.mmap.mousePressed = true;
+            // FIXME: does not take into account zoom
+            self.nes.mmap.mouseX = e.pageX - self.screen.offset().left;
+            self.nes.mmap.mouseY = e.pageY - self.screen.offset().top;
+          }
+        }).mouseup(function() {
+          setTimeout(function() {
+            if (self.nes.mmap) {
+              self.nes.mmap.mousePressed = false;
+              self.nes.mmap.mouseX = 0;
+              self.nes.mmap.mouseY = 0;
+            }
+          }, 500);
+        });
+        */
+
+        if (typeof roms != 'undefined') {
+          self.setRoms(roms);
+        }
+
+        /*
+         * Canvas
+         */
+        self.canvasContext = self.screen[0].getContext('2d');
+        self.canvasContext.fillStyle = 'black';
+        self.canvasContext.fillRect(0, 0, 960, 720);
+        self.canvasImageData = self.canvasContext.createImageData(960, 720);
+
         // Initialize frame buffer
         self.frameBuffer = new Array(256 * 240);
         self.prevBuffer = new Array(256 * 240);
@@ -130,10 +171,6 @@ if (typeof jQuery !== 'undefined') {
         self.frameInterval = setInterval(function () {
           self.writeFrame();
         }, 1000 / 60);
-
-        if (typeof roms != 'undefined') {
-          self.setRoms(roms);
-        }
 
         // 设置移动端控制器
         if (typeof setupMobileControls === 'function') {

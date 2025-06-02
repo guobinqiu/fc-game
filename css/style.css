@@ -1,0 +1,957 @@
+/* Base Styles */
+:root {
+  --primary-color: #007AFF;
+  --text-color: #333;
+  --bg-color: #f5f5f5;
+  --card-bg: #fff;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  justify-content: center;
+  padding: var(--spacing-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-btn.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Game Grid */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.game-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  position: relative;
+  aspect-ratio: 4/5;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.game-card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.game-info {
+  padding: var(--spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.game-meta {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #999;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn.active {
+  color: #ff3b30;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.pagination button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--primary-color);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#page-info {
+  font-size: 15px;
+  color: #666;
+  min-width: 100px;
+  text-align: center;
+}
+
+/* Game Screen Styles */
+.game-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-center {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0 20px;
+}
+
+.control-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn.muted {
+  color: #ff3b30;
+}
+
+.game-title {
+  color: white;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.main {
+  padding-top: 60px;
+  background: #000;
+  min-height: 100vh;
+}
+
+.screen {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px);
+}
+
+#emulator {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  width: 100%;
+  height: 100%;
+}
+
+#emulator canvas {
+  width: 800px;
+  height: 750px;
+}
+
+/* 移动端横屏样式 */
+@media (max-width: 926px) and (orientation: landscape) {
+  .game-header {
+    display: none;
+    /* 隐藏顶部导航让游戏全屏 */
+  }
+
+  .main {
+    padding-top: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #emulator canvas {
+    transform: scale(1.2);
+    transform-origin: center;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* 横屏控制按钮显示 */
+  .portrait-controls {
+    display: none !important;
+  }
+
+  .landscape-controls {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  /* 按钮样式 */
+  .direction-button,
+  .system-button,
+  .action-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 方向键样式 */
+  .direction-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 2px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .direction-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .up-button {
+    grid-area: 1 / 2;
+  }
+
+  .down-button {
+    grid-area: 3 / 2;
+  }
+
+  .left-button {
+    grid-area: 2 / 1;
+  }
+
+  .right-button {
+    grid-area: 2 / 3;
+  }
+
+  /* 系统按钮样式 */
+  .system-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    margin-top: 80px;
+    /* 添加上边距使按钮下移 */
+  }
+
+  .system-button {
+    min-width: 70px;
+    height: 35px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  /* 动作按钮样式 */
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    position: relative;
+  }
+
+  .action-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /* B按钮位置调整 */
+  .action-button[data-key="b"] {
+    transform: translateY(20px);
+  }
+}
+
+/* 移动端竖屏样式 */
+@media (max-width: 926px) and (orientation: portrait) {
+  .landscape-controls {
+    display: none !important;
+  }
+
+  .portrait-controls {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+  }
+
+  /* 系统按钮 */
+  .system-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+  }
+
+  .system-button {
+    min-width: 90px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .controls-bottom {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  /* 方向键 */
+  .direction-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 45px);
+    grid-template-rows: repeat(3, 45px);
+    gap: 2px;
+  }
+
+  .direction-button {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .up-button {
+    grid-area: 1 / 2;
+  }
+
+  .down-button {
+    grid-area: 3 / 2;
+  }
+
+  .left-button {
+    grid-area: 2 / 1;
+  }
+
+  .right-button {
+    grid-area: 2 / 3;
+  }
+
+  /* 动作按钮 */
+  .action-buttons {
+    display: flex;
+    gap: 20px;
+  }
+
+  .action-button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* 按钮点击效果 */
+  .direction-button:active,
+  .system-button:active,
+  .action-button:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+  }
+
+  /* 游戏画面调整 */
+  .main {
+    padding-top: 0;
+    height: 50vh;
+    display: flex;
+    align-items: flex-start;
+    margin-top: -200px;
+  }
+
+  #emulator canvas {
+    width: 400px;
+    height: 350px;
+  }
+}
+
+/* Loading State */
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading::after {
+  content: "";
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--spacing-md);
+  }
+
+  .game-card {
+    aspect-ratio: 3/4;
+  }
+
+  .game-info {
+    padding: var(--spacing-md);
+  }
+
+  .game-title {
+    font-size: 14px;
+  }
+
+  .nav-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+
+  .pagination {
+    gap: var(--spacing-lg);
+  }
+
+  .pagination button {
+    padding: 8px 20px;
+    font-size: 14px;
+    min-width: 80px;
+  }
+
+  #page-info {
+    font-size: 14px;
+    min-width: 80px;
+  }
+
+  /* 移动端操作按钮适配 */
+  .dpad,
+  .action-buttons {
+    transform: scale(0.9);
+  }
+
+  .system-buttons {
+    bottom: 20px;
+  }
+
+  .system-button {
+    width: 80px;
+    height: 36px;
+    font-size: 13px;
+  }
+}
+
+/* Safe Area Support */
+@supports(padding: max(0px)) {
+  .container {
+    padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+    padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+  }
+
+  .controls {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1c1c1e;
+    --card-bg: #2c2c2e;
+    --text-color: #fff;
+  }
+
+  .game-meta {
+    color: #999;
+  }
+
+  .nav-btn {
+    background: var(--card-bg);
+    color: #fff;
+  }
+
+  .loading {
+    background: rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* 默认隐藏移动端控制区域 */
+.mobile-controls {
+  display: none;
+}
+
+/* 移动端控制区域基础样式 */
+.mobile-controls {
+  display: block !important;
+  /* 强制显示控制区域 */
+  width: 100%;
+  z-index: 1000;
+}
+
+/* 所有方向上通用的按钮样式 */
+.direction-button,
+.system-button,
+.action-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.direction-button:active,
+.system-button:active,
+.action-button:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
+}
+
+/* 移动端横屏样式 */
+@media (max-width: 926px) and (orientation: landscape) {
+  .game-header {
+    display: none;
+    /* 隐藏顶部导航让游戏全屏 */
+  }
+
+  .main {
+    padding-top: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #emulator canvas {
+    transform: scale(1.2);
+    transform-origin: center;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* 横屏控制按钮显示 */
+  .portrait-controls {
+    display: none !important;
+  }
+
+  .landscape-controls {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  /* 按钮样式 */
+  .direction-button,
+  .system-button,
+  .action-button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 方向键样式 */
+  .direction-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 2px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .direction-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .up-button {
+    grid-area: 1 / 2;
+  }
+
+  .down-button {
+    grid-area: 3 / 2;
+  }
+
+  .left-button {
+    grid-area: 2 / 1;
+  }
+
+  .right-button {
+    grid-area: 2 / 3;
+  }
+
+  /* 系统按钮样式 */
+  .system-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    margin-top: 200px;
+  }
+
+  .system-button {
+    min-width: 70px;
+    height: 35px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  /* 动作按钮样式 */
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    position: relative;
+  }
+
+  .action-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /* B按钮位置调整 */
+  .action-button[data-key="b"] {
+    transform: translateY(20px);
+  }
+}
+
+/* 移动端竖屏样式 */
+@media (max-width: 926px) and (orientation: portrait) {
+  .landscape-controls {
+    display: none !important;
+  }
+
+  .portrait-controls {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+  }
+
+  /* 系统按钮 */
+  .system-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+  }
+
+  .system-button {
+    min-width: 90px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .controls-bottom {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  /* 方向键 */
+  .direction-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 45px);
+    grid-template-rows: repeat(3, 45px);
+    gap: 2px;
+  }
+
+  .direction-button {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .up-button {
+    grid-area: 1 / 2;
+  }
+
+  .down-button {
+    grid-area: 3 / 2;
+  }
+
+  .left-button {
+    grid-area: 2 / 1;
+  }
+
+  .right-button {
+    grid-area: 2 / 3;
+  }
+
+  /* 动作按钮 */
+  .action-buttons {
+    display: flex;
+    gap: 20px;
+  }
+
+  .action-button {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* 按钮点击效果 */
+  .direction-button:active,
+  .system-button:active,
+  .action-button:active {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0.95);
+  }
+
+  /* 游戏画面调整 */
+  .main {
+    padding-top: 0;
+    height: 50vh;
+    display: flex;
+    align-items: flex-start;
+    margin-top: -200px;
+  }
+
+  #emulator canvas {
+    width: 400px;
+    height: 350px;
+  }
+}

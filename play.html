@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="email=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="full-screen" content="yes">
+  <meta name="browsermode" content="application">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="x5-page-mode" content="app">
+  <title>FC游戏在线玩</title>
+  <meta name="keywords" content="FC/NES模拟器，在线畅玩八十款任天堂红白机游戏，小霸王游戏机其乐无穷。支持魂斗罗/超级玛丽/忍者龙剑传等等任天堂红白机游戏。" />
+  <meta name="description" content="非常适合在手机/电脑上在线游玩，近乎完美的还原任天堂FC/NES原版ROM游戏的视频和声音。" />
+  <!-- 基础样式 -->
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+  <div class="game-header">
+    <div class="header-left">
+      <button class="control-btn" id="btn-exit" title="退出游戏">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+    <div class="header-center">
+      <h1 class="game-title" id="game-title">加载中...</h1>
+    </div>
+    <div class="header-right">
+      <button class="control-btn" id="btn-sound" title="声音开关">
+        <i class="fas fa-volume-high"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="screen">
+      <div id="emulator">
+        <canvas width="256" height="240"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动端虚拟按键 -->
+  <div class="mobile-controls">
+    <!-- 横屏布局 -->
+    <div class="landscape-controls">
+      <!-- 左侧方向键 -->
+      <div class="direction-pad">
+        <div class="direction-button up-button" data-key="up">
+          <i class="fas fa-arrow-up"></i>
+        </div>
+        <div class="direction-button down-button" data-key="down">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+        <div class="direction-button left-button" data-key="left">
+          <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="direction-button right-button" data-key="right">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- 系统按钮 -->
+      <div class="system-buttons">
+        <div class="system-button" data-key="select">SELECT</div>
+        <div class="system-button" data-key="start">START</div>
+      </div>
+
+      <!-- 右侧动作按钮 -->
+      <div class="action-buttons">
+        <div class="action-button" data-key="b"><span>B</span></div>
+        <div class="action-button" data-key="a"><span>A</span></div>
+      </div>
+    </div>
+
+    <!-- 竖屏布局 -->
+    <div class="portrait-controls">
+      <!-- 系统按钮 - 放在上方 -->
+      <div class="system-buttons">
+        <div class="system-button" data-key="select">SELECT</div>
+        <div class="system-button" data-key="start">START</div>
+      </div>
+
+      <div class="controls-bottom">
+        <!-- 左侧方向键 -->
+        <div class="direction-pad">
+          <div class="direction-button up-button" data-key="up">
+            <i class="fas fa-arrow-up"></i>
+          </div>
+          <div class="direction-button down-button" data-key="down">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="direction-button left-button" data-key="left">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+          <div class="direction-button right-button" data-key="right">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+
+        <!-- 右侧动作按钮 -->
+        <div class="action-buttons">
+          <div class="action-button" data-key="b"><span>B</span></div>
+          <div class="action-button" data-key="a"><span>A</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="lib/dynamicaudio-min.js"></script>
+  <script type="text/javascript" src="source/nes.js"></script>
+  <script type="text/javascript" src="source/utils.js"></script>
+  <script type="text/javascript" src="source/cpu.js"></script>
+  <script type="text/javascript" src="source/keyboard.js"></script>
+  <script type="text/javascript" src="source/mappers.js"></script>
+  <script type="text/javascript" src="source/papu.js"></script>
+  <script type="text/javascript" src="source/ppu.js"></script>
+  <script type="text/javascript" src="source/rom.js"></script>
+  <script type="text/javascript" src="source/rom-cache.js"></script>
+  <script type="text/javascript" src="source/ui.js"></script>
+
+  <script type="text/javascript">
+    // 声明全局 NES 实例
+    let nes;
+    let audioContext;
+
+    // 从URL参数加载游戏
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameId = urlParams.get('game');
+
+    if (!gameId) {
+      window.location.href = 'index.html';
+    } else {
+      // 设置游戏标题
+      const gameTitle = decodeURIComponent(gameId)
+        .replace(/\.nes$/, '')
+        .replace(/[\(\[].*?[\)\]]/g, '')
+        .replace(/[_\-\.]/g, ' ')
+        .trim();
+      document.getElementById('game-title').textContent = gameTitle;
+      document.title = gameTitle + ' - FC游戏';
+
+      // 自定义 UI 构造函数
+      const JSNESUI = function (nes) {
+        this.nes = nes;
+
+        // 初始化 canvas
+        this.canvas = document.querySelector('#emulator canvas');
+        this.context = this.canvas.getContext('2d');
+
+        // 初始化音频
+        this.audio = new DynamicAudio({
+          swf: 'lib/dynamicaudio.swf'
+        });
+
+        this.enable = function () {
+          // 启用音频
+          if (nes.opts.emulateSound) {
+            try {
+              window.AudioContext = window.AudioContext || window.webkitAudioContext;
+              audioContext = new AudioContext();
+              if (audioContext.state === 'suspended') {
+                audioContext.resume();
+              }
+            } catch (e) {
+              console.error('Failed to initialize audio:', e);
+            }
+          }
+        };
+
+        this.updateStatus = function (msg) {
+          console.log(msg);
+        };
+
+        // 处理视频帧
+        this.writeFrame = function (buffer, prevBuffer) {
+          const imageData = this.context.getImageData(0, 0, 256, 240);
+          const pixel = imageData.data;
+          for (let i = 0; i < 256 * 240; i++) {
+            const bufferIndex = i;
+            const pixelIndex = i * 4;
+            pixel[pixelIndex] = buffer[bufferIndex] & 0xFF;
+            pixel[pixelIndex + 1] = (buffer[bufferIndex] >> 8) & 0xFF;
+            pixel[pixelIndex + 2] = (buffer[bufferIndex] >> 16) & 0xFF;
+            pixel[pixelIndex + 3] = 0xFF;
+          }
+          this.context.putImageData(imageData, 0, 0);
+        };
+
+        // 处理音频样本
+        this.writeAudio = function (samples) {
+          try {
+            if (!this.audio || !nes.opts.emulateSound) return;
+            this.audio.writeInt(samples);
+          } catch (e) {
+            console.error('Error writing audio:', e);
+          }
+        };
+      };
+
+      // 初始化模拟器实例
+      nes = new JSNES({
+        ui: JSNESUI,
+        emulateSound: true  // 默认开启声音
+      });
+
+      // 加载游戏ROM
+      const romPath = `all-roms/${gameId}`;
+      $.ajax({
+        url: romPath,
+        xhr: function () {
+          const xhr = $.ajaxSettings.xhr();
+          xhr.overrideMimeType('text/plain; charset=x-user-defined');
+          return xhr;
+        },
+        success: function (data) {
+          try {
+            // 装载ROM
+            nes.loadRom(data);
+            // 启动模拟器
+            nes.start();
+            // 初始化声音
+            if (nes.opts.emulateSound) {
+              try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContext();
+                if (audioContext.state === 'suspended') {
+                  audioContext.resume();
+                }
+              } catch (e) {
+                console.error('Failed to initialize audio:', e);
+              }
+            }
+            // 确保 NES 实例完全初始化后再设置控制器
+            if (nes && nes.keyboard) {
+              setupMobileControls();
+            }
+          } catch (e) {
+            console.error('Error initializing game:', e);
+            alert('游戏加载失败，请刷新页面重试');
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Failed to load ROM:', error);
+          alert('游戏文件加载失败，请刷新页面重试');
+        }
+      });
+    }
+
+    // 退出按钮
+    document.getElementById('btn-exit').addEventListener('click', function () {
+      window.location.href = 'index.html';
+    });
+
+    // 声音按钮点击处理
+    document.getElementById('btn-sound').addEventListener('click', function () {
+      const icon = this.querySelector('i');
+      const isMuted = this.classList.contains('muted');
+
+      if (isMuted) {
+        // 当前是静音，需要开启声音
+        nes.opts.emulateSound = true;
+        if (nes.ui && nes.ui.audio) {
+          try {
+            if (audioContext && audioContext.state === 'suspended') {
+              audioContext.resume();
+            }
+            nes.ui.audio.enableSound();
+          } catch (e) {
+            console.error('Failed to resume audio:', e);
+          }
+        }
+        icon.className = 'fas fa-volume-high';
+        this.classList.remove('muted');
+        this.title = '关闭声音';
+      } else {
+        // 当前有声音，需要静音
+        nes.opts.emulateSound = false;
+        if (nes.ui && nes.ui.audio) {
+          try {
+            if (audioContext && audioContext.state === 'running') {
+              audioContext.suspend();
+            }
+            nes.ui.audio.disableSound();
+          } catch (e) {
+            console.error('Failed to suspend audio:', e);
+          }
+        }
+        icon.className = 'fas fa-volume-xmark';
+        this.classList.add('muted');
+        this.title = '开启声音';
+      }
+    });
+
+    // 移动端控制器处理
+    function setupMobileControls() {
+      const buttons = document.querySelectorAll('.direction-button, .action-button, .system-button');
+      const keyMap = {
+        'up': 38,    // 上箭头
+        'down': 40,  // 下箭头
+        'left': 37,  // 左箭头
+        'right': 39, // 右箭头
+        'a': 88,     // X键 (PC端X)
+        'b': 90,     // Z键 (PC端Z)
+        'select': 17, // Ctrl键
+        'start': 13   // Enter键
+      };
+
+      // 记录当前按下的按钮
+      const activeButtons = new Set();
+
+      function simulateKeyEvent(type, keyCode) {
+        if (!nes || !nes.keyboard) return;
+
+        try {
+          const event = new KeyboardEvent(type, {
+            keyCode: keyCode,
+            which: keyCode,
+            bubbles: true,
+            cancelable: true
+          });
+          document.dispatchEvent(event);
+        } catch (e) {
+          console.error('Error simulating key event:', e);
+        }
+      }
+
+      // 处理触摸结束时释放所有按键
+      function releaseAllButtons() {
+        if (!nes || !nes.keyboard) return;
+
+        activeButtons.forEach(keyCode => {
+          simulateKeyEvent('keyup', keyCode);
+        });
+        activeButtons.clear();
+      }
+
+      buttons.forEach(button => {
+        const key = button.dataset.key;
+        const keyCode = keyMap[key];
+
+        // 处理触摸事件
+        button.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.add(keyCode);
+          simulateKeyEvent('keydown', keyCode);
+        }, { passive: false });
+
+        button.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        }, { passive: false });
+
+        button.addEventListener('touchcancel', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        }, { passive: false });
+
+        // 处理鼠标事件（用于测试）
+        button.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.add(keyCode);
+          simulateKeyEvent('keydown', keyCode);
+        });
+
+        button.addEventListener('mouseup', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        });
+
+        button.addEventListener('mouseleave', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeButtons.delete(keyCode);
+          simulateKeyEvent('keyup', keyCode);
+        });
+      });
+
+      // 页面失焦时释放所有按键
+      window.addEventListener('blur', releaseAllButtons);
+      window.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          releaseAllButtons();
+        }
+      });
+
+      // 阻止移动控制区域的滚动和缩放
+      document.querySelector('.mobile-controls').addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, { passive: false });
+
+      // 阻止游戏画面区域的滚动和缩放
+      document.querySelector('.screen').addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, { passive: false });
+
+      // 阻止游戏画面区域的触摸事件
+      document.querySelector('.screen').addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }, { passive: false });
+    }
+  </script>
+</body>
+
+</html>
