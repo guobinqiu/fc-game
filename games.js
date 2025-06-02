@@ -2,12 +2,13 @@
 const GameManager = {
   games: [],
   currentPage: 1,
-  gamesPerPage: 24,
+  gamesPerPage: 50,
   currentView: 'all',
   favorites: new Set(),
+  searchTerm: '',
 
   // 初始化
-  init: async function() {
+  init: async function () {
     await this.loadGames();
     this.loadFavorites();
     this.setupEventListeners();
@@ -15,21 +16,21 @@ const GameManager = {
   },
 
   // 加载游戏列表
-  loadGames: async function() {
+  loadGames: async function () {
     try {
       // 获取目录列表
       const response = await fetch('all-roms/');
       const text = await response.text();
-      
+
       // 使用正则表达式匹配所有 .nes 和 .png 文件
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, 'text/html');
       const links = Array.from(doc.querySelectorAll('a'));
-      
+
       // 获取所有 .nes 和 .png 文件
       const nesFiles = new Set();
       const pngFiles = new Set();
-      
+
       links.forEach(link => {
         const href = link.getAttribute('href');
         if (href) {
@@ -92,7 +93,7 @@ const GameManager = {
   },
 
   // 加载收藏
-  loadFavorites: function() {
+  loadFavorites: function () {
     const saved = localStorage.getItem('favorites');
     if (saved) {
       this.favorites = new Set(JSON.parse(saved));
@@ -100,12 +101,12 @@ const GameManager = {
   },
 
   // 保存收藏
-  saveFavorites: function() {
+  saveFavorites: function () {
     localStorage.setItem('favorites', JSON.stringify([...this.favorites]));
   },
 
   // 切换收藏状态
-  toggleFavorite: function(gameId) {
+  toggleFavorite: function (gameId) {
     if (this.favorites.has(gameId)) {
       this.favorites.delete(gameId);
     } else {
@@ -116,7 +117,17 @@ const GameManager = {
   },
 
   // 设置事件监听
-  setupEventListeners: function() {
+  setupEventListeners: function () {
+    // 搜索输入框
+    const searchInput = document.getElementById('game-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        this.searchTerm = e.target.value.toLowerCase();
+        this.currentPage = 1;
+        this.renderGames();
+      });
+    }
+
     // 导航按钮
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -147,7 +158,7 @@ const GameManager = {
   },
 
   // 获取过滤后的游戏列表
-  getFilteredGames: function() {
+  getFilteredGames: function () {
     let filtered = this.games;
 
     // 收藏视图过滤
@@ -155,11 +166,20 @@ const GameManager = {
       filtered = filtered.filter(game => this.favorites.has(game.id));
     }
 
+    // 搜索过滤
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(game =>
+        game.title.toLowerCase().includes(term) ||
+        game.filename.toLowerCase().includes(term)
+      );
+    }
+
     return filtered;
   },
 
   // 渲染游戏列表
-  renderGames: function() {
+  renderGames: function () {
     const grid = document.getElementById('game-grid');
     grid.innerHTML = '<div class="loading"></div>';
 
@@ -172,14 +192,16 @@ const GameManager = {
     const maxPage = Math.ceil(filteredGames.length / this.gamesPerPage);
     document.getElementById('prev-page').disabled = this.currentPage === 1;
     document.getElementById('next-page').disabled = this.currentPage === maxPage;
-    document.getElementById('page-info').textContent = 
+    document.getElementById('page-info').textContent =
       `第 ${this.currentPage} / ${maxPage || 1} 页 (共 ${filteredGames.length} 个游戏)`;
 
     // 渲染游戏卡片
     if (pageGames.length === 0) {
       grid.innerHTML = `
         <div class="empty-state">
-          <p>${this.currentView === 'favorites' ? '还没有收藏任何游戏' : '没有找到相关游戏'}</p>
+          <p>${this.currentView === 'favorites' ? '还没有收藏任何游戏' :
+          (this.searchTerm ? `没有找到与 "${this.searchTerm}" 相关的游戏` : '没有找到相关游戏')}
+          </p>
         </div>
       `;
       return;
