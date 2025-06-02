@@ -84,7 +84,8 @@ body {
 .game-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(10, minmax(280px / 4 * 5, auto)); /* 10行，每行高度基于卡片比例 */
+  grid-template-rows: repeat(10, minmax(280px / 4 * 5, auto));
+  /* 10行，每行高度基于卡片比例 */
   gap: var(--spacing-xl);
   margin-bottom: var(--spacing-xl);
   /* 防止自动换行 */
@@ -119,10 +120,11 @@ body {
     /* 移动端调整容器高度以适应更多内容 */
     min-height: calc(12 * (160px / 4 * 5) + 11 * var(--spacing-md));
   }
-  
+
   .game-grid {
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(12, minmax(160px / 4 * 5, auto)); /* 移动端显示12行 */
+    grid-template-rows: repeat(12, minmax(160px / 4 * 5, auto));
+    /* 移动端显示12行 */
     gap: var(--spacing-md);
   }
 }
@@ -362,20 +364,24 @@ body {
   }
 
   .game-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(2, 1fr);
+    /* 改为固定2列 */
+    gap: var(--spacing-lg);
   }
 
   .game-card {
     aspect-ratio: 3/4;
+    height: auto;
+    /* 移除固定高度限制 */
   }
 
   .game-info {
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
   }
 
   .game-title {
-    font-size: 14px;
+    font-size: 16px;
+    /* 增大字体 */
   }
 
   .nav-btn {
