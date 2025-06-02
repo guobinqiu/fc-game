@@ -11,6 +11,14 @@ const GameManager = {
   init: async function () {
     await this.loadGames();
     this.loadFavorites();
+
+    // 检查是否有返回页面信息
+    const returnPage = sessionStorage.getItem('returnPage');
+    if (returnPage) {
+      this.currentPage = parseInt(returnPage, 10);
+      sessionStorage.removeItem('returnPage');
+    }
+
     this.setupEventListeners();
     this.renderGames();
   },
@@ -226,6 +234,8 @@ const GameManager = {
     grid.querySelectorAll('.game-card').forEach(card => {
       card.addEventListener('click', (e) => {
         if (!e.target.classList.contains('favorite-btn')) {
+          // 在跳转前存储当前页面信息
+          sessionStorage.setItem('returnPage', this.currentPage);
           const gameId = card.dataset.id;
           window.location.href = `play.html?game=${encodeURIComponent(gameId)}`;
         }
