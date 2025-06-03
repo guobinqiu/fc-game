@@ -1,4 +1,4 @@
-# NES GAME
+# FC Gamehub
 
 ## 按键设置
 
