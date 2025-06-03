@@ -149,7 +149,7 @@
         .replace(/[\(\[].*?[\)\]]/g, '')
         .replace(/[_\-\.]/g, ' ')
         .trim();
-      document.getElementById('game-title').textContent = gameTitle;
+      document.getElementById('game-title').textContent = "游戏编号: " + gameTitle;
       document.title = gameTitle + ' - FC游戏';
 
       // 自定义 UI 构造函数

@@ -2,7 +2,7 @@
 const GameManager = {
   games: [],
   currentPage: 1,
-  gamesPerPage: 50,
+  gamesPerPage: 48, // 8行6列 = 48个游戏/页
   currentView: 'all',
   favorites: new Set(),
   searchTerm: '',
@@ -220,8 +220,9 @@ const GameManager = {
         ${game.preview ? `<img src="${game.preview}" alt="${game.title}" loading="lazy">` : ''}
         <div class="game-info">
           <div class="game-title">${game.title}</div>
-          <div class="game-category">${game.category}</div>
-          <div class="game-filename">${game.filename}</div>
+          <!-- 隐藏类别和文件名，但保留数据以供搜索 -->
+          <div class="game-category" style="display: none;">${game.category}</div>
+          <div class="game-filename" style="display: none;">${game.filename}</div>
         </div>
         <button class="favorite-btn ${this.favorites.has(game.id) ? 'active' : ''}"
                 onclick="GameManager.toggleFavorite('${game.id}')">
