@@ -237,7 +237,8 @@ const GameManager = {
           // 在跳转前存储当前页面信息
           sessionStorage.setItem('returnPage', this.currentPage);
           const gameId = card.dataset.id;
-          window.location.href = `play.html?game=${encodeURIComponent(gameId)}`;
+          // window.location.href = `play.html?game=${encodeURIComponent(gameId)}`;
+          window.open(`play.html?game=${encodeURIComponent(gameId)}`, '_blank');
         }
       });
     });
@@ -247,4 +248,4 @@ const GameManager = {
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
   GameManager.init();
-}); 
+});
