@@ -6,7 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="format-detection" content="telephone=no">
-  <meta name="format-detection" content="email=no">
+  <meta name="format-detection" content="em        },
+        error: function (xhr, status, error) {
+          handleRomLoadError(error);
+        }
+      });">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="full-screen" content="yes">
   <meta name="browsermode" content="application">
@@ -212,8 +216,43 @@
         emulateSound: true  // 默认开启声音
       });
 
+      // ROM 加载超时时间 (毫秒)
+      const ROM_LOAD_TIMEOUT = 5000;
+
+      // ROM 加载计时器
+      let romLoadTimer;
+
+      // ROM 加载错误处理函数
+      function handleRomLoadError(error) {
+        console.error('ROM loading error:', error);
+        clearTimeout(romLoadTimer);
+
+        // 停止任何正在运行的模拟器实例
+        if (nes && nes.isRunning) {
+          try {
+            nes.stop();
+          } catch (e) {
+            console.error('Error stopping emulator:', e);
+          }
+        }
+
+        // 显示错误消息
+        const errorMessage = 'ROM加载失败。此ROM可能存在问题或不兼容。请尝试其他游戏。';
+        document.getElementById('game-title').textContent = 'ROM加载失败';
+        alert(errorMessage);
+
+        // 关闭当前窗口
+        window.close();
+      }
+
       // 加载游戏ROM
       const romPath = `all-roms/${gameId}`;
+
+      // 设置加载超时
+      romLoadTimer = setTimeout(() => {
+        handleRomLoadError(new Error('ROM loading timeout'));
+      }, ROM_LOAD_TIMEOUT);
+
       $.ajax({
         url: romPath,
         xhr: function () {
@@ -223,10 +262,25 @@
         },
         success: function (data) {
           try {
+            // 清除超时计时器
+            clearTimeout(romLoadTimer);
+
+            // 检查 ROM 数据的基本有效性
+            if (!data || data.length < 16 || data.indexOf('NES\x1a') !== 0) {
+              throw new Error('Invalid ROM format');
+            }
+
             // 装载ROM
             nes.loadRom(data);
+
+            // 验证 ROM 是否成功加载
+            if (!nes.rom || !nes.rom.valid) {
+              throw new Error('ROM validation failed');
+            }
+
             // 启动模拟器
             nes.start();
+
             // 初始化声音
             if (nes.opts.emulateSound) {
               try {
@@ -239,13 +293,13 @@
                 console.error('Failed to initialize audio:', e);
               }
             }
+
             // 确保 NES 实例完全初始化后再设置控制器
             if (nes && nes.keyboard) {
               setupMobileControls();
             }
           } catch (e) {
-            console.error('Error initializing game:', e);
-            alert('游戏加载失败，请刷新页面重试');
+            handleRomLoadError(e);
           }
         },
         error: function (xhr, status, error) {
@@ -260,7 +314,7 @@
       try {
         // 添加过渡效果（可选）
         document.body.style.opacity = '0';
-          
+
         // 延迟后跳转，给用户更好的视觉反馈
         setTimeout(() => {
           window.location.href = 'index.html';

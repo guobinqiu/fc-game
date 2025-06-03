@@ -237,8 +237,8 @@ const GameManager = {
           // 在跳转前存储当前页面信息
           sessionStorage.setItem('returnPage', this.currentPage);
           const gameId = card.dataset.id;
-          // window.location.href = `play.html?game=${encodeURIComponent(gameId)}`;
-          window.open(`play.html?game=${encodeURIComponent(gameId)}`, '_blank');
+          // 使用 noopener 打开新窗口,避免子页面影响父页面
+          window.open(`play.html?game=${encodeURIComponent(gameId)}`, '_blank', 'noopener');
         }
       });
     });
