@@ -26,70 +26,17 @@ const GameManager = {
   // 加载游戏列表
   loadGames: async function () {
     try {
-      // 获取目录列表
-      const response = await fetch('all-roms/');
-      const text = await response.text();
+      // 从 games-list.json 加载游戏数据
+      const response = await fetch('games-list.json');
+      const data = await response.json();
 
-      // 使用正则表达式匹配所有 .nes 和 .png 文件
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, 'text/html');
-      const links = Array.from(doc.querySelectorAll('a'));
-
-      // 获取所有 .nes 和 .png 文件
-      const nesFiles = new Set();
-      const pngFiles = new Set();
-
-      links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href) {
-          if (href.toLowerCase().endsWith('.nes')) {
-            nesFiles.add(href);
-          } else if (href.toLowerCase().endsWith('.png')) {
-            pngFiles.add(href);
-          }
-        }
-      });
-
-      this.games = Array.from(nesFiles).map(filename => {
-        // 检查是否有对应的预览图
-        const pngFilename = filename.slice(0, -4) + '.png';
-        const hasPreview = pngFiles.has(pngFilename);
-
-        // 从文件名生成游戏标题
-        let title = filename.slice(0, -4)  // 移除 .nes 后缀
-          .replace(/[\(\[].*?[\)\]]/g, '')  // 移除括号内的内容
-          .replace(/[_\-\.]/g, ' ')  // 替换下划线、横线和点为空格
-          .replace(/\s+/g, ' ')  // 合并多个空格
-          .trim();  // 移除首尾空格
-
-        // 如果标题是空的，使用文件名
-        if (!title) {
-          title = filename.slice(0, -4);
-        }
-
-        // 根据文件名特征判断游戏类别
-        let category = '未分类';
-        const lowerFilename = filename.toLowerCase();
-        if (lowerFilename.includes('mario') || lowerFilename.includes('contra') || lowerFilename.includes('ninja') || lowerFilename.includes('adventure')) {
-          category = '动作冒险';
-        } else if (lowerFilename.includes('fight') || lowerFilename.includes('combat') || lowerFilename.includes('gun')) {
-          category = '射击格斗';
-        } else if (lowerFilename.includes('tetris') || lowerFilename.includes('puzzle') || lowerFilename.includes('doctor') || lowerFilename.includes('mahjong')) {
-          category = '休闲益智';
-        } else if (lowerFilename.includes('rpg') || lowerFilename.includes('dragon') || lowerFilename.includes('final') || lowerFilename.includes('fantasy')) {
-          category = '角色扮演';
-        } else if (lowerFilename.includes('race') || lowerFilename.includes('sport') || lowerFilename.includes('tennis') || lowerFilename.includes('golf')) {
-          category = '竞速体育';
-        }
-
-        return {
-          id: filename,
-          title: title,
-          category: category,
-          filename: filename,
-          preview: hasPreview ? `all-roms/${pngFilename}` : null
-        };
-      });
+      this.games = data.games.map(game => ({
+        id: game.id,
+        title: game.title,
+        category: game.category,
+        filename: game.id,
+        preview: game.hasPreview ? `all-roms/${game.id.replace('.nes', '.png')}` : null
+      }));
 
       // 按标题排序
       this.games.sort((a, b) => a.title.localeCompare(b.title));
