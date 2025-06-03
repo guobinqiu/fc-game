@@ -98,39 +98,13 @@ body {
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   position: relative;
-  /* 固定卡片宽高比例 */
-  /* aspect-ratio: 4/5; */
-  /* 设置固定高度以确保均匀分布 */
-  /* height: calc((100vw - 5 * var(--spacing-xl)) / 5 * 4 / 5); */
   display: flex;
-  /* flex-direction: column; */
 }
 
 /* PC端隐藏虚拟按键 */
 @media (min-width: 768px) {
   .mobile-controls {
     display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .game-card {
-    /* PC端保持固定比例 */
-    height: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    /* 移动端调整容器高度以适应更多内容 */
-    min-height: calc(12 * (160px / 4 * 5) + 11 * var(--spacing-md));
-  }
-
-  .game-grid {
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(12, minmax(160px / 4 * 5, auto));
-    /* 移动端显示12行 */
-    gap: var(--spacing-md);
   }
 }
 
@@ -158,7 +132,6 @@ body {
   font-weight: 600;
   margin-bottom: var(--spacing-xs);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -374,12 +347,6 @@ body {
     padding: var(--spacing-md);
   }
 
-  .game-grid {
-    grid-template-columns: repeat(2, 1fr);
-    /* 改为固定2列 */
-    gap: var(--spacing-lg);
-  }
-
   .game-card {
     aspect-ratio: 4/3;
     height: auto;
@@ -505,6 +472,12 @@ body {
 
 /* 移动端横屏样式 */
 @media (max-width: 926px) and (orientation: landscape) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+    /* 改为固定3列 */
+    gap: var(--spacing-lg);
+  }
+
   .main {
     padding-top: 0;
     height: 100vh;
@@ -622,6 +595,12 @@ body {
 
 /* 移动端竖屏样式 */
 @media (max-width: 926px) and (orientation: portrait) {
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* 改为固定2列 */
+    gap: var(--spacing-lg);
+  }
+
   .landscape-controls {
     display: none !important;
   }
