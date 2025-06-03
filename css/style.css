@@ -106,6 +106,13 @@ body {
   /* flex-direction: column; */
 }
 
+/* PC端隐藏虚拟按键 */
+@media (min-width: 768px) {
+  .mobile-controls {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   .game-card {
     /* PC端保持固定比例 */
@@ -460,17 +467,18 @@ body {
   }
 }
 
-/* 默认隐藏移动端控制区域 */
-.mobile-controls {
-  display: none;
-}
-
 /* 移动端控制区域基础样式 */
 .mobile-controls {
-  display: block !important;
-  /* 强制显示控制区域 */
   width: 100%;
-  z-index: 1000;
+  display: block;
+  /* 默认显示 */
+}
+
+/* PC端隐藏虚拟按键 */
+@media (min-width: 768px) {
+  .mobile-controls {
+    display: none;
+  }
 }
 
 /* 所有方向上通用的按钮样式 */
