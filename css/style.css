@@ -36,8 +36,6 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--spacing-lg);
-  /* 调整固定高度，确保显示8行 */
-  min-height: calc(8 * (280px / 4 * 5) + 7 * var(--spacing-lg));
 }
 
 /* Navigation */
@@ -85,7 +83,7 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(8, minmax(280px / 4 * 5, auto));
-  /* 6列8行的布局 */
+  /* 8行6列的布局 */
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
   /* 防止自动换行 */
