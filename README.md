@@ -16,7 +16,7 @@
 ## 在线运行
 
 ```
-https://guobinqiu.github.io/nesgame/
+https://guobinqiu.github.io/fc-game/
 https://nesgame-f14.pages.dev/
 ```
 
