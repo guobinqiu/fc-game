@@ -13,18 +13,17 @@
 | Select   | Space        |
 | Start    | Enter        |
 
-## 在线运行
+## 在线玩
 
 ```
-https://guobinqiu.github.io/fc-game/
-https://nesgame-f14.pages.dev/
+https://game.guobin.site/
 ```
 
 ## 本地运行
 
 ```
-python3 -m http.server 8888
-http://localhost:8888/
+python3 -m http.server <port>
+http://localhost:<port>/
 ```
 
 <img width="200" alt="image" src="https://github.com/user-attachments/assets/b2133cbd-1b99-4d2d-bee8-5d523e69a741" />
