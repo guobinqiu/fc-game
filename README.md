@@ -1,8 +1,8 @@
-# NES GAME
+# FC Gamehub
 
 ## 按键设置
 
-| 游戏手柄 | 电脑键盘按键 |
+| 手柄 | 电脑键盘 |
 | -------- | ------------ |
 | Up       | ↑            |
 | Down     | ↓            |
@@ -16,7 +16,7 @@
 ## 在线运行
 
 ```
-https://guobinqiu.github.io/nesgame/
+https://guobinqiu.github.io/fc-game/
 https://nesgame-f14.pages.dev/
 ```
 
@@ -26,4 +26,9 @@ https://nesgame-f14.pages.dev/
 python3 -m http.server 8888
 http://localhost:8888/
 ```
+
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/b2133cbd-1b99-4d2d-bee8-5d523e69a741" />
+<img width="200" alt="image" src="https://github.com/user-attachments/assets/ad330ce5-3207-4583-9c9c-2adbdd75e319" />
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/206ad0eb-a818-40ff-8651-68e4d4e33050" />
+
 
