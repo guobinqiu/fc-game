@@ -18,8 +18,6 @@
 ```
 https://game.guobin.site/
 or
-https://nesgame-f14.pages.dev
-or
 guobinqiu.github.io/fc-game/
 ```
 
