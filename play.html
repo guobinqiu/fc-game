@@ -212,15 +212,59 @@
         emulateSound: true  // 默认开启声音
       });
 
+      // 检查环境支持
+      function checkEnvironmentSupport() {
+        // 检查WebGL支持
+        try {
+          const canvas = document.createElement('canvas');
+          const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+          if (!gl) {
+            console.warn('WebGL not supported - performance may be affected');
+          }
+        } catch (e) {
+          console.warn('WebGL check failed:', e);
+        }
+
+        // 检查可用内存
+        if (navigator.deviceMemory) {
+          console.log('Device memory:', navigator.deviceMemory, 'GB');
+          if (navigator.deviceMemory < 2) {
+            console.warn('Low memory device detected');
+          }
+        }
+
+        // 检查是否支持SharedArrayBuffer（用于高性能操作）
+        try {
+          if (crossOriginIsolated) {
+            console.log('SharedArrayBuffer is supported');
+          }
+        } catch (e) {
+          console.warn('SharedArrayBuffer not supported');
+        }
+      }
+
+      // 运行环境检查
+      checkEnvironmentSupport();
+
+      // 检测是否为移动端
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
       // ROM 加载超时时间 (毫秒)
-      const ROM_LOAD_TIMEOUT = 5000;
+      const ROM_LOAD_TIMEOUT = isMobile ? 10000 : 5000; // 移动端使用更长的超时时间
 
       // ROM 加载计时器
       let romLoadTimer;
 
       // ROM 加载错误处理函数
       function handleRomLoadError(error) {
-        console.error('ROM loading error:', error);
+        console.error('ROM loading error:', {
+          error: error,
+          errorName: error.name,
+          errorMessage: error.message,
+          errorStack: error.stack,
+          romPath: romPath,
+          isMobile: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        });
         clearTimeout(romLoadTimer);
 
         // 停止任何正在运行的模拟器实例
@@ -264,6 +308,25 @@
             // 检查 ROM 数据的基本有效性
             if (!data || data.length < 16 || data.indexOf('NES\x1a') !== 0) {
               throw new Error('Invalid ROM format');
+            }
+
+            // 解析ROM头部以获取预期大小
+            const header = new Array(16);
+            for (let i = 0; i < 16; i++) {
+              header[i] = data.charCodeAt(i) & 0xFF;
+            }
+            const romBanks = header[4];
+            const vromBanks = header[5] * 2;
+            const expectedSize = 16 + (romBanks * 16384) + (vromBanks * 4096);
+            
+            if (data.length < expectedSize) {
+              console.error('ROM size mismatch:', {
+                expected: expectedSize,
+                actual: data.length,
+                romBanks: romBanks,
+                vromBanks: vromBanks
+              });
+              throw new Error('Incomplete ROM data');
             }
 
             // 装载ROM

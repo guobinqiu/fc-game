@@ -152,29 +152,34 @@ JSNES.ROM.prototype = {
         
         // Create VROM tiles:
         this.vromTile = new Array(this.vromCount);
-        for (i=0; i < this.vromCount; i++) {
-            this.vromTile[i] = new Array(256);
-            for (j=0; j < 256; j++) {
-                this.vromTile[i][j] = new JSNES.PPU.Tile();
+        const createTiles = (index) => {
+            if (!this.vromTile[index]) {
+                this.vromTile[index] = new Array(256);
+                for (let j = 0; j < 256; j++) {
+                    this.vromTile[index][j] = new JSNES.PPU.Tile();
+                }
             }
-        }
-        
+            return this.vromTile[index];
+        };
+
         // Convert CHR-ROM banks to tiles:
         var tileIndex;
         var leftOver;
         for (v=0; v < this.vromCount; v++) {
+            // 延迟创建tiles
+            const tiles = createTiles(v);
             for (i=0; i < 4096; i++) {
                 tileIndex = i >> 4;
                 leftOver = i % 16;
                 if (leftOver < 8) {
-                    this.vromTile[v][tileIndex].setScanline(
+                    tiles[tileIndex].setScanline(
                         leftOver,
                         this.vrom[v][i],
                         this.vrom[v][i+8]
                     );
                 }
                 else {
-                    this.vromTile[v][tileIndex].setScanline(
+                    tiles[tileIndex].setScanline(
                         leftOver-8,
                         this.vrom[v][i-8],
                         this.vrom[v][i]
