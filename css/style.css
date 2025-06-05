@@ -78,6 +78,76 @@ body {
   color: white;
 }
 
+
+/* 搜索框样式 */
+.search-container {
+  margin: 20px 0;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.heart {
+  position: relative;
+  width: 20px;
+  height: 14px;
+}
+
+.heart:before,
+.heart:after {
+  position: absolute;
+  content: "";
+  left: 10px;
+  top: 0;
+  width: 10px;
+  height: 16px;
+  background-color: #999;
+  -moz-border-radius: 50px 50px 0 0;
+  border-radius: 50px 50px 0 0;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-transform-origin: 0 100%;
+  -moz-transform-origin: 0 100%;
+  -ms-transform-origin: 0 100%;
+  -o-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+}
+
+.heart:after {
+  left: 0;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: 100% 100%;
+  -moz-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  -o-transform-origin: 100% 100%;
+  transform-origin: 100% 100%;
+}
+
+.heart.active:before,
+.heart.active:after {
+  background-color: #ff3b30;
+}
+
 /* Game Grid */
 .game-grid {
   display: grid;
@@ -99,13 +169,6 @@ body {
   cursor: pointer;
   position: relative;
   display: flex;
-}
-
-/* PC端隐藏虚拟按键 */
-@media (min-width: 768px) {
-  .mobile-controls {
-    display: none;
-  }
 }
 
 .game-card:hover {
@@ -206,35 +269,22 @@ body {
 .game-header {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.85);
+  left: 10px;
+  right: 10px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  visibility: hidden;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+  z-index: 102;
 }
 
 .header-center {
   flex-grow: 1;
   text-align: center;
   margin: 0 20px;
+  opacity: 0.7;
+  /* Make title visible but translucent */
 }
 
 .control-btn {
@@ -242,7 +292,7 @@ body {
   height: 36px;
   border: none;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
   display: flex;
@@ -250,6 +300,8 @@ body {
   justify-content: center;
   transition: all 0.3s ease;
   font-size: 16px;
+  opacity: 1;
+  /* Keep control buttons fully visible */
 }
 
 .control-btn:hover {
@@ -270,7 +322,6 @@ body {
   font-size: 16px;
   margin: 0;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .main {
@@ -289,18 +340,20 @@ body {
 }
 
 #emulator {
-  position: relative;
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
-  width: 100%;
-  height: 100%;
+  z-index: 101;
 }
 
 #emulator canvas {
-  width: 800px;
-  height: 750px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Loading State */
@@ -377,22 +430,6 @@ body {
     font-size: 14px;
     min-width: 80px;
   }
-
-  /* 移动端操作按钮适配 */
-  .dpad,
-  .action-buttons {
-    transform: scale(0.9);
-  }
-
-  .system-buttons {
-    bottom: 20px;
-  }
-
-  .system-button {
-    width: 80px;
-    height: 36px;
-    font-size: 13px;
-  }
 }
 
 /* Safe Area Support */
@@ -434,7 +471,76 @@ body {
 .mobile-controls {
   width: 100%;
   display: block;
-  /* 默认显示 */
+}
+
+/* 通用按钮样式 */
+.direction-button,
+.system-button,
+.action-button {
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 通用按钮点击效果 */
+.direction-button:active,
+.system-button:active,
+.action-button:active {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0.95);
+}
+
+.up-button {
+  grid-area: 1 / 2;
+}
+
+.down-button {
+  grid-area: 3 / 2;
+}
+
+.left-button {
+  grid-area: 2 / 1;
+}
+
+.right-button {
+  grid-area: 2 / 3;
+}
+
+.direction-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 45px);
+  grid-template-rows: repeat(3, 45px);
+  gap: 2px;
+}
+
+.action-button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.system-button {
+  min-width: 90px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
 
 /* PC端隐藏虚拟按键 */
@@ -444,118 +550,27 @@ body {
   }
 }
 
-/* 所有方向上通用的按钮样式 */
-.direction-button,
-.system-button,
-.action-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.direction-button:active,
-.system-button:active,
-.action-button:active {
-  background: rgba(255, 255, 255, 0.1);
-  transform: scale(0.95);
-}
-
 /* 移动端横屏样式 */
 @media (max-width: 926px) and (orientation: landscape) {
   .game-grid {
     grid-template-columns: repeat(3, 1fr);
-    /* 改为固定3列 */
+    /* 固定3列 */
     gap: var(--spacing-lg);
-  }
-
-  .main {
-    padding-top: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #emulator canvas {
-    transform: scale(1);
-    transform-origin: center;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  /* 横屏控制按钮显示 */
-  .portrait-controls {
-    display: none !important;
   }
 
   .landscape-controls {
     display: flex !important;
     position: fixed;
-    bottom: 20px;
-    left: 0;
-    right: 0;
+    bottom: 40px;
+    left: 20px;
+    right: 20px;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    z-index: 100;
-    /* Add z-index to ensure controls are on top */
+    z-index: 102;
   }
 
-  /* 按钮样式 */
-  .direction-button,
-  .system-button,
-  .action-button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* 方向键样式 */
-  .direction-pad {
-    display: grid;
-    grid-template-columns: repeat(3, 40px);
-    grid-template-rows: repeat(3, 40px);
-    gap: 2px;
-    width: 120px;
-    height: 120px;
-  }
-
-  .direction-button {
-    width: 40px;
-    height: 40px;
-  }
-
-  .up-button {
-    grid-area: 1 / 2;
-  }
-
-  .down-button {
-    grid-area: 3 / 2;
-  }
-
-  .left-button {
-    grid-area: 2 / 1;
-  }
-
-  .right-button {
-    grid-area: 2 / 3;
-  }
-
-  /* 系统按钮样式 */
+  /* 系统按钮容器样式 */
   .system-buttons {
     display: flex;
     gap: 15px;
@@ -563,28 +578,10 @@ body {
     margin-top: 200px;
   }
 
-  .system-button {
-    min-width: 70px;
-    height: 35px;
-    border-radius: 20px;
-    font-size: 14px;
-  }
-
-  /* 动作按钮样式 */
+  /* 动作按钮容器样式 */
   .action-buttons {
     display: flex;
     gap: 15px;
-    position: relative;
-    z-index: 1;
-    /* Add z-index to ensure action buttons are visible */
-  }
-
-  .action-button {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: bold;
   }
 
   /* B按钮位置调整 */
@@ -597,25 +594,21 @@ body {
 @media (max-width: 926px) and (orientation: portrait) {
   .game-grid {
     grid-template-columns: repeat(2, 1fr);
-    /* 改为固定2列 */
     gap: var(--spacing-lg);
   }
 
-  .landscape-controls {
-    display: none !important;
+  .portrait-controls {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
   }
 
   .portrait-controls {
-    display: flex !important;
-    flex-direction: column;
-    position: fixed;
-    bottom: 0px;
-    left: 0;
-    right: 0;
-    padding: 20px;
+    z-index: 102;
   }
 
-  /* 系统按钮 */
+  /* 系统按钮容器样式 */
   .system-buttons {
     display: flex;
     justify-content: center;
@@ -624,88 +617,19 @@ body {
     margin-top: 20px;
   }
 
-  .system-button {
-    min-width: 90px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    color: rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-  }
-
+  /* 控制器底部区域 */
   .controls-bottom {
     flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 10px 20px;
   }
 
-  /* 方向键 */
-  .direction-pad {
-    display: grid;
-    grid-template-columns: repeat(3, 45px);
-    grid-template-rows: repeat(3, 45px);
-    gap: 2px;
-  }
-
-  .direction-button {
-    width: 45px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .up-button {
-    grid-area: 1 / 2;
-  }
-
-  .down-button {
-    grid-area: 3 / 2;
-  }
-
-  .left-button {
-    grid-area: 2 / 1;
-  }
-
-  .right-button {
-    grid-area: 2 / 3;
-  }
-
-  /* 动作按钮 */
+  /* 动作按钮容器样式 */
   .action-buttons {
     display: flex;
     gap: 20px;
-  }
-
-  .action-button {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
-
-  /* 按钮点击效果 */
-  .direction-button:active,
-  .system-button:active,
-  .action-button:active {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(0.95);
   }
 
   #emulator {
@@ -716,73 +640,4 @@ body {
     width: 400px;
     height: 350px;
   }
-}
-
-/* 搜索框样式 */
-.search-container {
-  margin: 20px 0;
-  position: relative;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-}
-
-.heart {
-  position: relative;
-  width: 20px;
-  height: 14px;
-}
-
-.heart:before,
-.heart:after {
-  position: absolute;
-  content: "";
-  left: 10px;
-  top: 0;
-  width: 10px;
-  height: 16px;
-  background-color: #999;
-  -moz-border-radius: 50px 50px 0 0;
-  border-radius: 50px 50px 0 0;
-  -webkit-transform: rotate(-45deg);
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  transform: rotate(-45deg);
-  -webkit-transform-origin: 0 100%;
-  -moz-transform-origin: 0 100%;
-  -ms-transform-origin: 0 100%;
-  -o-transform-origin: 0 100%;
-  transform-origin: 0 100%;
-}
-
-.heart:after {
-  left: 0;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  -webkit-transform-origin: 100% 100%;
-  -moz-transform-origin: 100% 100%;
-  -ms-transform-origin: 100% 100%;
-  -o-transform-origin: 100% 100%;
-  transform-origin: 100% 100%;
-}
-
-.heart.active:before,
-.heart.active:after {
-  background-color: #ff3b30;
 }
