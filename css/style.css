@@ -506,6 +506,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
+    z-index: 100;
+    /* Add z-index to ensure controls are on top */
   }
 
   /* 按钮样式 */
@@ -573,6 +575,8 @@ body {
     display: flex;
     gap: 15px;
     position: relative;
+    z-index: 1;
+    /* Add z-index to ensure action buttons are visible */
   }
 
   .action-button {
@@ -734,11 +738,13 @@ body {
   border-color: #4a90e2;
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
+
 .heart {
   position: relative;
   width: 20px;
   height: 14px;
 }
+
 .heart:before,
 .heart:after {
   position: absolute;
@@ -761,6 +767,7 @@ body {
   -o-transform-origin: 0 100%;
   transform-origin: 0 100%;
 }
+
 .heart:after {
   left: 0;
   -webkit-transform: rotate(45deg);
@@ -774,6 +781,7 @@ body {
   -o-transform-origin: 100% 100%;
   transform-origin: 100% 100%;
 }
+
 .heart.active:before,
 .heart.active:after {
   background-color: #ff3b30;
