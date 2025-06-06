@@ -651,3 +651,14 @@ body {
     height: 350px;
   }
 }
+
+/* Play Page Specific Styles */
+.page-play,
+.page-play html,
+.page-play body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
