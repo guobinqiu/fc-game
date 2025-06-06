@@ -340,7 +340,7 @@ body {
 
 #emulator {
   position: absolute;
-  top: 0;
+  top: 26px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -387,6 +387,17 @@ body {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* Play Page Specific Styles */
+.page-play,
+.page-play html,
+.page-play body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Mobile Responsive */
@@ -474,8 +485,8 @@ body {
 .direction-button,
 .system-button,
 .action-button {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.3);
@@ -510,9 +521,8 @@ body {
 
 .direction-pad {
   display: grid;
-  grid-template-columns: repeat(3, 40px);
-  grid-template-rows: repeat(3, 40px);
-  /* gap: 2px; */
+  grid-template-columns: repeat(3, 45px);
+  grid-template-rows: repeat(3, 45px);
 }
 
 .action-button {
@@ -586,13 +596,6 @@ body {
     transform: translateY(20px);
   }
 
-  #emulator {
-    top: 10px;
-    left: 0px;
-    right: 0px;
-    bottom: 10px;
-  }
-
   #emulator canvas {
     width: 400px;
     height: 350px;
@@ -642,7 +645,6 @@ body {
   }
 
   #emulator {
-    top: 16px;
     align-items: flex-start;
   }
 
@@ -650,15 +652,4 @@ body {
     width: 400px;
     height: 350px;
   }
-}
-
-/* Play Page Specific Styles */
-.page-play,
-.page-play html,
-.page-play body {
-  overflow: hidden !important;
-  height: 100vh !important;
-  width: 100vw !important;
-  margin: 0 !important;
-  padding: 0 !important;
 }
