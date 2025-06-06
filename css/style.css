@@ -336,12 +336,11 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 60px);
 }
 
 #emulator {
   position: absolute;
-  top: 24px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -399,7 +398,6 @@ body {
   .game-card {
     aspect-ratio: 4/3;
     height: auto;
-    /* 移除固定高度限制 */
   }
 
   .game-info {
@@ -408,7 +406,6 @@ body {
 
   .game-title {
     font-size: 16px;
-    /* 增大字体 */
   }
 
   .nav-btn {
@@ -477,8 +474,8 @@ body {
 .direction-button,
 .system-button,
 .action-button {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.3);
@@ -513,9 +510,9 @@ body {
 
 .direction-pad {
   display: grid;
-  grid-template-columns: repeat(3, 45px);
-  grid-template-rows: repeat(3, 45px);
-  gap: 2px;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows: repeat(3, 40px);
+  /* gap: 2px; */
 }
 
 .action-button {
@@ -561,12 +558,11 @@ body {
   .landscape-controls {
     display: flex !important;
     position: fixed;
-    bottom: 40px;
+    bottom: 0px;
     left: 20px;
     right: 20px;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
     z-index: 102;
   }
 
@@ -575,7 +571,8 @@ body {
     display: flex;
     gap: 15px;
     align-items: flex-start;
-    margin-top: 200px;
+    margin-top: 300px;
+    margin-bottom: 10px;
   }
 
   /* 动作按钮容器样式 */
@@ -587,6 +584,18 @@ body {
   /* B按钮位置调整 */
   .action-button[data-key="b"] {
     transform: translateY(20px);
+  }
+
+  #emulator {
+    top: 10px;
+    left: 0px;
+    right: 0px;
+    bottom: 10px;
+  }
+
+  #emulator canvas {
+    width: 400px;
+    height: 350px;
   }
 }
 
@@ -633,6 +642,7 @@ body {
   }
 
   #emulator {
+    top: 16px;
     align-items: flex-start;
   }
 
