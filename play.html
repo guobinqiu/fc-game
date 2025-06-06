@@ -376,12 +376,14 @@
 
         // 延迟后跳转，给用户更好的视觉反馈
         setTimeout(() => {
-          window.location.href = 'index.html';
+          // window.location.href = 'index.html';
+          window.close();
         }, 300);
       } catch (error) {
         console.error('Exit button error:', error);
         // 如果出错，直接跳转
-        window.location.href = 'index.html';
+        // window.location.href = 'index.html';
+        window.close();
       }
     });
 
