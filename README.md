@@ -18,7 +18,7 @@
 ```
 https://game.guobin.site/
 or
-guobinqiu.github.io/fc-game/
+https://guobinqiu.github.io/fc-game/
 ```
 
 <img width="200" alt="image" src="https://github.com/user-attachments/assets/b2133cbd-1b99-4d2d-bee8-5d523e69a741" />
